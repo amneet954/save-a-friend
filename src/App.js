@@ -17,7 +17,7 @@ const App = () => {
         password: registerPassword,
       },
       withCredentials: true,
-      url: "http://localhost:4000/register",
+      url: "http://localhost:4000/auth/register",
     });
     const { data } = response;
     console.log(data);
@@ -31,7 +31,7 @@ const App = () => {
         password: loginPassword,
       },
       withCredentials: true,
-      url: "http://localhost:4000/login",
+      url: "http://localhost:4000/auth/login",
     });
     const { data } = response;
     console.log(data);
@@ -41,7 +41,7 @@ const App = () => {
     const response = await axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:4000/user",
+      url: "http://localhost:4000/auth",
     });
     const { data } = response;
     setData(data);
