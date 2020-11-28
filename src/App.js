@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
@@ -7,7 +7,7 @@ const App = () => {
   const [registerPassword, setRegisterPassword] = useState("");
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [data, setData] = useState(null);
+  const [data, setData] = useState("");
 
   const register = async () => {
     const response = await axios({
@@ -45,8 +45,14 @@ const App = () => {
     });
     const { data } = response;
     setData(data);
-    console.log(data);
+    console.log(data.username);
   };
+
+  // useEffect(() => {
+  //   // Update the document title using the browser API
+  //   if (data.username == null) document.title = "S-A-F";
+  //   else document.title = data.username;
+  // });
 
   return (
     <div className="App">
