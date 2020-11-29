@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { auth } from "../store";
+import { login, register } from "../store";
 import { connect } from "react-redux";
 import axios from "axios";
 import "../App.css";
@@ -18,9 +18,9 @@ class Authentication extends Component {
   }
 
   componentDidMount() {
-    // console.log("from componentdidmount", this.props.userInfo.user._id);
-    if (this.props.userInfo.user._id) {
-      console.log("Not allowed anymore");
+    let userId = this.props.userInfo.user._id;
+    if (userId) {
+      alert(`You have already logged in. Id: ${userId}`);
       this.props.history.push("/");
     }
   }
@@ -34,25 +34,16 @@ class Authentication extends Component {
 
   async register(event) {
     event.preventDefault();
-    console.log("well");
-    const response = await axios({
-      method: "POST",
-      data: {
-        username: this.state.username,
-        password: this.state.password,
-      },
-      withCredentials: true,
-      url: "http://localhost:4000/auth/register",
-    });
-    const { data } = response;
-    console.log(data);
+    await this.props.dispatchNewUser(this.state.username, this.state.password);
+    this.props.history.push("/");
   }
 
   async login(event) {
     event.preventDefault();
-    await this.props.dispatchCases(this.state.username, this.state.password);
+    await this.props.dispatchUser(this.state.username, this.state.password);
     this.props.history.push("/");
   }
+
   render() {
     return (
       <div className="App">
@@ -101,7 +92,9 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
-  dispatchCases: (username, password) => dispatch(auth(username, password)),
+  dispatchUser: (username, password) => dispatch(login(username, password)),
+  dispatchNewUser: (username, password) =>
+    dispatch(register(username, password)),
 });
 
 export default connect(mapState, mapDispatch)(Authentication);

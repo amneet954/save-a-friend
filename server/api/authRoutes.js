@@ -24,7 +24,7 @@ router.post("/login", (req, res, next) => {
 router.post("/register", (req, res) => {
   User.findOne({ username: req.body.username }, async (error, document) => {
     if (error) throw error;
-    if (document) res.send("User already exists");
+    if (document) res.send(document);
     if (!document) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const newUser = new User({
