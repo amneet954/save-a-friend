@@ -1,79 +1,107 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
+import { auth } from "../store";
+import { connect } from "react-redux";
 import axios from "axios";
 import "../App.css";
 
-const Authentication = (props) => {
-  const [registerUsername, setRegisterUsername] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [loginUsername, setLoginUsername] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  let [data, setUsername] = useState(null);
-  if (localStorage.getItem("user")) data = localStorage.getItem("user");
+class Authentication extends Component {
+  constructor() {
+    super();
+    this.state = {
+      username: "",
+      password: "",
+      data: "",
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.login = this.login.bind(this);
+    this.register = this.register.bind(this);
+  }
 
-  const register = async () => {
+  componentDidMount() {
+    // console.log("from componentdidmount", this.props.userInfo.user._id);
+    if (this.props.userInfo.user._id) {
+      console.log("Not allowed anymore");
+      this.props.history.push("/");
+    }
+  }
+
+  handleChange(event) {
+    event.preventDefault();
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  async register(event) {
+    event.preventDefault();
+    console.log("well");
     const response = await axios({
       method: "POST",
       data: {
-        username: registerUsername,
-        password: registerPassword,
+        username: this.state.username,
+        password: this.state.password,
       },
       withCredentials: true,
       url: "http://localhost:4000/auth/register",
     });
     const { data } = response;
     console.log(data);
-  };
+  }
 
-  const login = async () => {
-    const response = await axios({
-      method: "POST",
-      data: {
-        username: loginUsername,
-        password: loginPassword,
-      },
-      withCredentials: true,
-      url: "http://localhost:4000/auth/login",
-    });
-    const { data } = response;
-    let { _id, username } = data;
-    console.log(data);
-    localStorage.setItem("id", _id);
-    localStorage.setItem("user", username);
-    setUsername(localStorage.getItem("user"));
-  };
-
-  return (
-    <div className="App">
-      <div>
-        <h1>Register</h1>
-        <input
-          placeholder="username"
-          onChange={(event) => setRegisterUsername(event.target.value)}
-        />
-        <input
-          placeholder="password"
-          onChange={(event) => setRegisterPassword(event.target.value)}
-        />
-        <button onClick={register}>Submit</button>
-      </div>
-
-      <div>
-        <h1>Login</h1>
-        <input
-          placeholder="username"
-          onChange={(event) => setLoginUsername(event.target.value)}
-        />
-        <input
-          placeholder="password"
-          onChange={(event) => setLoginPassword(event.target.value)}
-        />
-        <button onClick={login}>Submit</button>
-        {data || localStorage.getItem("user") ? (
+  async login(event) {
+    event.preventDefault();
+    await this.props.dispatchCases(this.state.username, this.state.password);
+    this.props.history.push("/");
+  }
+  render() {
+    return (
+      <div className="App">
+        <form onSubmit={this.register}>
+          <h1>Register</h1>
+          <input
+            placeholder="username"
+            name="username"
+            onChange={this.handleChange}
+          />
+          <input
+            placeholder="password"
+            name="password"
+            onChange={this.handleChange}
+          />
+          <button type="submit" className="submitButton">
+            Submit
+          </button>
+        </form>
+        <form onSubmit={this.login}>
+          <h1>Login</h1>
+          <input
+            placeholder="username"
+            name="username"
+            onChange={this.handleChange}
+          />
+          <input
+            placeholder="password"
+            name="password"
+            onChange={this.handleChange}
+          />
+          <button type="submit" className="submitButton">
+            Submit
+          </button>
+        </form>
+        {/* {data || localStorage.getItem("user") ? (
           <h1>Welcome Back {data}</h1>
-        ) : null}
+        ) : null} */}
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
-export default Authentication;
+const mapState = (state) => ({
+  userInfo: state,
+});
+
+const mapDispatch = (dispatch) => ({
+  dispatchCases: (username, password) => dispatch(auth(username, password)),
+});
+
+export default connect(mapState, mapDispatch)(Authentication);
