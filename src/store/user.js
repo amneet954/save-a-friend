@@ -1,13 +1,16 @@
 import axios from "axios";
+// import history from "../history";
 
 //ACTION TYPES
 const GET_USER = "GET_USER";
 const REMOVE_USER = "REMOVE_USER";
+const REGISTER_USER = "REGISTER_USER";
 
 //INITIAL STATE
 const defaultUser = {};
 
 //ACTION CREATORS
+const registerUser = (user) => ({ type: REGISTER_USER, user });
 const getUser = (user) => ({ type: GET_USER, user });
 const removeUser = () => ({ type: REMOVE_USER });
 
@@ -22,7 +25,25 @@ export const me = () => async (dispatch) => {
   }
 };
 
-export const auth = (username, password) => async (dispatch) => {
+export const register = (username, password) => async (dispatch) => {
+  try {
+    let response = await axios({
+      method: "POST",
+      data: {
+        username: username,
+        password: password,
+      },
+      withCredentials: true,
+      url: "http://localhost:4000/auth/register",
+    });
+    let { data } = response;
+    dispatch(registerUser(data));
+  } catch (error) {
+    return dispatch(registerUser({ error: error }));
+  }
+};
+
+export const login = (username, password) => async (dispatch) => {
   try {
     let response = await axios({
       method: "POST",
@@ -34,7 +55,6 @@ export const auth = (username, password) => async (dispatch) => {
       url: "http://localhost:4000/auth/login",
     });
     let { data } = response;
-    console.log(data);
     dispatch(getUser(data));
   } catch (error) {
     return dispatch(getUser({ error: error }));
@@ -43,8 +63,14 @@ export const auth = (username, password) => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
   try {
-    await axios.post("http://localhost:4000/auth/logout");
+    await axios({
+      method: "DELETE",
+      withCredentials: true,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      url: "http://localhost:4000/auth/logout",
+    });
     dispatch(removeUser());
+    // history.push('/login')
   } catch (err) {
     console.error(err);
   }
@@ -55,6 +81,8 @@ export const logout = () => async (dispatch) => {
 let userReducer = (state = defaultUser, action) => {
   switch (action.type) {
     case GET_USER:
+      return action.user;
+    case REGISTER_USER:
       return action.user;
     case REMOVE_USER:
       return defaultUser;

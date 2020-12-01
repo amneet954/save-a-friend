@@ -15,7 +15,6 @@ router.post("/login", (req, res, next) => {
       req.logIn(user, (error) => {
         if (error) throw error;
         res.send(user);
-        // console.log(req.user);
       });
     }
   })(req, res, next);
@@ -24,7 +23,7 @@ router.post("/login", (req, res, next) => {
 router.post("/register", (req, res) => {
   User.findOne({ username: req.body.username }, async (error, document) => {
     if (error) throw error;
-    if (document) res.send("User already exists");
+    if (document) res.send(document);
     if (!document) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       const newUser = new User({
@@ -35,6 +34,15 @@ router.post("/register", (req, res) => {
       res.send("Used Created");
     }
   });
+});
+
+router.delete("/logout", (req, res, next) => {
+  passport.authenticate("local", (error, user, info) => {
+    if (error) throw error;
+    req.logOut();
+    req.session.destroy();
+    if (!user) res.send("No User Exists");
+  })(req, res, next);
 });
 
 module.exports = router;
