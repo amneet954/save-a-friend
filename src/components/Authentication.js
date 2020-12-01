@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { login, register } from "../store";
 import { connect } from "react-redux";
-import axios from "axios";
-import "../App.css";
 
 class Authentication extends Component {
   constructor() {
@@ -79,9 +77,6 @@ class Authentication extends Component {
             Submit
           </button>
         </form>
-        {/* {data || localStorage.getItem("user") ? (
-          <h1>Welcome Back {data}</h1>
-        ) : null} */}
       </div>
     );
   }

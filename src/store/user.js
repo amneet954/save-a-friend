@@ -1,4 +1,5 @@
 import axios from "axios";
+// import history from "../history";
 
 //ACTION TYPES
 const GET_USER = "GET_USER";
@@ -36,9 +37,9 @@ export const register = (username, password) => async (dispatch) => {
       url: "http://localhost:4000/auth/register",
     });
     let { data } = response;
-    dispatch(getUser(data));
+    dispatch(registerUser(data));
   } catch (error) {
-    return dispatch(getUser({ error: error }));
+    return dispatch(registerUser({ error: error }));
   }
 };
 
@@ -62,8 +63,14 @@ export const login = (username, password) => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
   try {
-    await axios.post("http://localhost:4000/auth/logout");
+    await axios({
+      method: "DELETE",
+      withCredentials: true,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      url: "http://localhost:4000/auth/logout",
+    });
     dispatch(removeUser());
+    // history.push('/login')
   } catch (err) {
     console.error(err);
   }
@@ -74,6 +81,8 @@ export const logout = () => async (dispatch) => {
 let userReducer = (state = defaultUser, action) => {
   switch (action.type) {
     case GET_USER:
+      return action.user;
+    case REGISTER_USER:
       return action.user;
     case REMOVE_USER:
       return defaultUser;

@@ -1,6 +1,8 @@
 import { connect } from "react-redux";
+
 const Home = ({ user }) => {
   let username = user.user.username;
+  console.log("HOME", user);
   return (
     <div>
       <h1>Hi</h1>
