@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { login, register } from "../store";
 import { connect } from "react-redux";
+import { Button, Container } from "@material-ui/core";
 
 class Authentication extends Component {
   constructor() {
@@ -44,40 +45,58 @@ class Authentication extends Component {
 
   render() {
     return (
-      <div className="App">
+      // <div className="App">
+      <Container maxWidth="sm">
         <form onSubmit={this.register}>
-          <h1>Register</h1>
-          <input
-            placeholder="username"
-            name="username"
-            onChange={this.handleChange}
-          />
-          <input
-            placeholder="password"
-            name="password"
-            onChange={this.handleChange}
-          />
-          <button type="submit" className="submitButton">
-            Submit
-          </button>
+          <h1 className="textCenter" style={{ paddingLeft: "200px" }}>
+            Register
+          </h1>
+          <div style={{ paddingLeft: "100px" }}>
+            <input
+              placeholder="username"
+              name="username"
+              onChange={this.handleChange}
+            />
+            <span style={{ paddingLeft: "5px" }}>
+              <input
+                placeholder="password"
+                name="password"
+                onChange={this.handleChange}
+              />
+            </span>
+            <span style={{ paddingLeft: "10px" }}>
+              <Button type="submit" color="primary">
+                Submit
+              </Button>
+            </span>
+          </div>
         </form>
         <form onSubmit={this.login}>
-          <h1>Login</h1>
-          <input
-            placeholder="username"
-            name="username"
-            onChange={this.handleChange}
-          />
-          <input
-            placeholder="password"
-            name="password"
-            onChange={this.handleChange}
-          />
-          <button type="submit" className="submitButton">
-            Submit
-          </button>
+          <h1 className="textCenter" style={{ paddingLeft: "210px" }}>
+            Login
+          </h1>
+          <span style={{ paddingLeft: "100px" }}>
+            <input
+              placeholder="username"
+              name="username"
+              onChange={this.handleChange}
+            />
+            <span style={{ paddingLeft: "5px" }}>
+              <input
+                placeholder="password"
+                name="password"
+                onChange={this.handleChange}
+              />
+            </span>
+            <span style={{ paddingLeft: "10px" }}>
+              <Button type="submit" color="primary">
+                Submit
+              </Button>
+            </span>
+          </span>
         </form>
-      </div>
+      </Container>
+      // </div>
     );
   }
 }

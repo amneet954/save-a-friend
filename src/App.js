@@ -1,13 +1,11 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { NavBar, Authentication, Home } from "./components";
-// const loggedIn = localStorage.getItem("user");
 
 const App = () => {
   return (
     <BrowserRouter>
       <div>
         <NavBar />
-        {/* <NavBar {...{ loggedIn }} /> */}
         <main>
           <Switch>
             <Route exact path="/" component={Home} />
