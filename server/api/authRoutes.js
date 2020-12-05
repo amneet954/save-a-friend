@@ -21,19 +21,24 @@ router.post("/login", (req, res, next) => {
 });
 
 router.post("/register", (req, res) => {
-  User.findOne({ username: req.body.username }, async (error, document) => {
-    if (error) throw error;
-    if (document) res.send(document);
-    if (!document) {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const newUser = new User({
-        username: req.body.username,
-        password: hashedPassword,
-      });
-      await newUser.save();
-      res.send("Used Created");
+  User.findOne(
+    { username: req.body.username, email: req.body.email },
+    async (error, document) => {
+      if (error) throw error;
+      if (document) res.send(document);
+      if (!document) {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const newUser = new User({
+          username: req.body.username,
+          password: hashedPassword,
+          email: req.body.email,
+          zipCode: req.body.zipCode,
+        });
+        await newUser.save();
+        res.send(newUser);
+      }
     }
-  });
+  );
 });
 
 router.delete("/logout", (req, res, next) => {

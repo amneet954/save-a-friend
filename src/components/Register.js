@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { login } from "../store";
+import { register } from "../store";
 import { connect } from "react-redux";
 import { Button, Container } from "@material-ui/core";
 
@@ -9,10 +9,12 @@ class Login extends Component {
     this.state = {
       username: "",
       password: "",
+      email: "",
+      zipCode: "",
       data: "",
     };
     this.handleChange = this.handleChange.bind(this);
-    this.login = this.login.bind(this);
+    this.register = this.register.bind(this);
   }
 
   componentDidMount() {
@@ -30,39 +32,63 @@ class Login extends Component {
     });
   }
 
-  async login(event) {
+  async register(event) {
     event.preventDefault();
-    await this.props.dispatchUser(this.state.username, this.state.password);
+    await this.props.dispatchNewUser(
+      this.state.username,
+      this.state.password,
+      this.state.email,
+      this.state.zipCode
+    );
     this.props.history.push("/");
   }
 
   render() {
     return (
       <Container maxWidth="sm">
-        <form onSubmit={this.login}>
-          <h1 className="textCenter" style={{ paddingLeft: "210px" }}>
-            Login
+        <form onSubmit={this.register}>
+          <h1 className="textCenter" style={{ paddingLeft: "200px" }}>
+            Register
           </h1>
-          <span style={{ paddingLeft: "100px" }}>
+          <div style={{ paddingLeft: "100px" }}>
             <input
-              placeholder="username"
+              placeholder="Username"
               name="username"
               onChange={this.handleChange}
               required
             />
             <span style={{ paddingLeft: "5px" }}>
               <input
-                placeholder="password"
+                placeholder="Password"
                 type="password"
                 name="password"
                 onChange={this.handleChange}
                 required
               />
             </span>
-            <span style={{ paddingLeft: "10px" }}>
+            <span>
+              <input
+                placeholder="Email Address"
+                type="email"
+                name="email"
+                onChange={this.handleChange}
+                required
+              />
+            </span>
+            <span style={{ paddingLeft: "5px" }}>
+              <input
+                placeholder="Zip Code"
+                type="text"
+                name="zipCode"
+                onChange={this.handleChange}
+                required
+              />
+            </span>
+            <br></br>
+            <br></br>
+            <div style={{ paddingLeft: "115px" }}>
               <Button
                 type="submit"
-                color="inherit"
                 style={{
                   color: "white",
                   backgroundColor: "#00e600",
@@ -70,8 +96,8 @@ class Login extends Component {
               >
                 Submit
               </Button>
-            </span>
-          </span>
+            </div>
+          </div>
         </form>
       </Container>
     );
@@ -83,7 +109,8 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
-  dispatchUser: (username, password) => dispatch(login(username, password)),
+  dispatchNewUser: (username, password, email, zipCode) =>
+    dispatch(register(username, password, email, zipCode)),
 });
 
 export default connect(mapState, mapDispatch)(Login);

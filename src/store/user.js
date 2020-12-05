@@ -25,13 +25,17 @@ export const me = () => async (dispatch) => {
   }
 };
 
-export const register = (username, password) => async (dispatch) => {
+export const register = (username, password, email, zipCode) => async (
+  dispatch
+) => {
   try {
     let response = await axios({
       method: "POST",
       data: {
         username: username,
         password: password,
+        email: email,
+        zipCode: zipCode,
       },
       withCredentials: true,
       url: "http://localhost:4000/auth/register",

@@ -43,12 +43,20 @@ const NavBar = ({ user, handleLogOut }) => {
               <Button color="inherit">Logout</Button>
             </Link>
           ) : (
-            <Link
-              to="/login"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              <Button color="inherit">Login</Button>
-            </Link>
+            <span>
+              <Link
+                to="/login"
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                <Button color="inherit">Login</Button>
+              </Link>
+              <Link
+                to="/register"
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                <Button color="inherit">Register</Button>
+              </Link>
+            </span>
           )}
         </Toolbar>
       </AppBar>

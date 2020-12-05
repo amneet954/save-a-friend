@@ -7,9 +7,11 @@ const Home = ({ user }) => {
   return (
     <Container maxWidth="sm">
       {username ? (
-        <h2 style={{ "text-align": "center" }}>Welcome Back {username}</h2>
+        <div>
+          <h2 style={{ textAlign: "center" }}>Welcome Back {username}</h2>
+        </div>
       ) : (
-        <h2 style={{ "text-align": "center" }}>Login to Continue...</h2>
+        <h2 style={{ textAlign: "center" }}>Login to Continue...</h2>
       )}
     </Container>
   );
