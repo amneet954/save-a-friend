@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", (error, user, info) => {
     if (error) throw error;
-    if (!user) res.send("No User Exists");
+    if (!user) res.send({ error: "No User Exists" });
     else {
       req.logIn(user, (error) => {
         if (error) throw error;
@@ -20,8 +20,8 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-router.post("/register", (req, res) => {
-  User.findOne(
+router.post("/register", async (req, res, next) => {
+  await User.findOne(
     { username: req.body.username, email: req.body.email },
     async (error, document) => {
       if (error) throw error;
@@ -46,7 +46,7 @@ router.delete("/logout", (req, res, next) => {
     if (error) throw error;
     req.logOut();
     req.session.destroy();
-    if (!user) res.send("No User Exists");
+    if (!user) res.send({ error: "No User Logged In" });
   })(req, res, next);
 });
 
