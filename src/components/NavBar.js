@@ -33,6 +33,13 @@ const NavBar = ({ user, handleLogOut }) => {
             <Link to="/" style={{ textDecoration: "none", color: "white" }}>
               Welcome
             </Link>
+            &nbsp;&nbsp;
+            <Link
+              to="/report"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              Create Pet Alert
+            </Link>
           </Typography>
           {user.user._id ? (
             <Link
@@ -43,20 +50,12 @@ const NavBar = ({ user, handleLogOut }) => {
               <Button color="inherit">Logout</Button>
             </Link>
           ) : (
-            <span>
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                <Button color="inherit">Login</Button>
-              </Link>
-              <Link
-                to="/register"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                <Button color="inherit">Register</Button>
-              </Link>
-            </span>
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              <Button color="inherit">Login/Sign Up</Button>
+            </Link>
           )}
         </Toolbar>
       </AppBar>
