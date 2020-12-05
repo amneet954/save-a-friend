@@ -35,7 +35,6 @@ router.post("/register", (req, res) => {
           zipCode: req.body.zipCode,
         });
         await newUser.save();
-        console.log(newUser);
         res.send(newUser);
       }
     }
