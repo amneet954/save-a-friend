@@ -5,11 +5,11 @@ const Home = ({ user }) => {
   let username = user.user.username;
   console.log("HOME", user);
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="sm">
       {username ? (
-        <h2>Welcome Back {username}</h2>
+        <h2 style={{ "text-align": "center" }}>Welcome Back {username}</h2>
       ) : (
-        <h2>Login to Continue...</h2>
+        <h2 style={{ "text-align": "center" }}>Login to Continue...</h2>
       )}
     </Container>
   );

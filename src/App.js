@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { NavBar, Authentication, Home } from "./components";
+import { NavBar, Login, Home } from "./components";
 
 const App = () => {
   return (
@@ -9,7 +9,7 @@ const App = () => {
         <main>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={Authentication} />
+            <Route exact path="/login" component={Login} />
             <Route
               exact
               path="*"

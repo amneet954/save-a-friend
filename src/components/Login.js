@@ -3,7 +3,7 @@ import { login, register } from "../store";
 import { connect } from "react-redux";
 import { Button, Container } from "@material-ui/core";
 
-class Authentication extends Component {
+class Login extends Component {
   constructor() {
     super();
     this.state = {
@@ -19,7 +19,7 @@ class Authentication extends Component {
   componentDidMount() {
     let userId = this.props.userInfo.user._id;
     if (userId) {
-      alert(`You have already logged in. Id: ${userId}`);
+      alert(`You are already logged in. Id: ${userId}`);
       this.props.history.push("/");
     }
   }
@@ -45,7 +45,6 @@ class Authentication extends Component {
 
   render() {
     return (
-      // <div className="App">
       <Container maxWidth="sm">
         <form onSubmit={this.register}>
           <h1 className="textCenter" style={{ paddingLeft: "200px" }}>
@@ -56,16 +55,24 @@ class Authentication extends Component {
               placeholder="username"
               name="username"
               onChange={this.handleChange}
+              required
             />
             <span style={{ paddingLeft: "5px" }}>
               <input
                 placeholder="password"
                 name="password"
                 onChange={this.handleChange}
+                required
               />
             </span>
             <span style={{ paddingLeft: "10px" }}>
-              <Button type="submit" color="primary">
+              <Button
+                type="submit"
+                style={{
+                  color: "white",
+                  backgroundColor: "#00e600",
+                }}
+              >
                 Submit
               </Button>
             </span>
@@ -80,23 +87,31 @@ class Authentication extends Component {
               placeholder="username"
               name="username"
               onChange={this.handleChange}
+              required
             />
             <span style={{ paddingLeft: "5px" }}>
               <input
                 placeholder="password"
                 name="password"
                 onChange={this.handleChange}
+                required
               />
             </span>
             <span style={{ paddingLeft: "10px" }}>
-              <Button type="submit" color="primary">
+              <Button
+                type="submit"
+                color="inherit"
+                style={{
+                  color: "white",
+                  backgroundColor: "#00e600",
+                }}
+              >
                 Submit
               </Button>
             </span>
           </span>
         </form>
       </Container>
-      // </div>
     );
   }
 }
@@ -111,4 +126,4 @@ const mapDispatch = (dispatch) => ({
     dispatch(register(username, password)),
 });
 
-export default connect(mapState, mapDispatch)(Authentication);
+export default connect(mapState, mapDispatch)(Login);
