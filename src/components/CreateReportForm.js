@@ -3,7 +3,6 @@ import { reportCreation } from "../store";
 import { connect } from "react-redux";
 import { Button, Container } from "@material-ui/core";
 
-// const CreateReportForm = ({ user }) => {
 class CreateReportForm extends Component {
   constructor() {
     super();
@@ -15,8 +14,6 @@ class CreateReportForm extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.createReport = this.createReport.bind(this);
-    // this.login = this.login.bind(this);
-    // this.register = this.register.bind(this);
   }
 
   componentDidMount() {
@@ -44,12 +41,10 @@ class CreateReportForm extends Component {
       zipCode
     );
     console.log(this.props.user);
-    // alert("Case sucessfully created");
   }
   render() {
     let username = this.props.user.user.username;
     let id = this.props.user.user._id;
-    // console.log(this.props.user);
     if (id) {
       return (
         <div>
@@ -109,7 +104,6 @@ class CreateReportForm extends Component {
 const mapState = (state) => {
   return {
     user: state,
-    // report: state,
   };
 };
 

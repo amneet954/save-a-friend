@@ -1,6 +1,16 @@
 const router = require("express").Router();
 const { Report } = require("../models");
 
+router.get("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const query = await Report.find({ userId: id });
+    res.send(query);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 router.post("/", async (req, res, next) => {
   console.log("hi");
   const { userId, petName, lastPlaceSeen, contactEmail, zipCode } = req.body;

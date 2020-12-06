@@ -42,7 +42,7 @@ const NavBar = ({ user, handleLogOut }) => {
             </Link>
             &nbsp;&nbsp;
             <Link
-              to="/report"
+              to="/reports"
               style={{ textDecoration: "none", color: "white" }}
             >
               Pet Status
