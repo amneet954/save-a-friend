@@ -19,7 +19,6 @@ class AllReports extends Component {
           <h1>Please log in to view your pet case reports</h1>
         </div>
       );
-      // } else if (Array.isArray(this.props.report)) {
     } else {
       return (
         <div>
