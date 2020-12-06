@@ -40,6 +40,12 @@ const NavBar = ({ user, handleLogOut }) => {
             >
               Create Pet Alert
             </Link>
+            <Link
+              to="/report"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              Pet Status
+            </Link>
           </Typography>
           {user.user._id ? (
             <Link
@@ -78,63 +84,3 @@ const mapDispatch = (dispatch) => {
 };
 
 export default connect(mapState, mapDispatch)(NavBar);
-
-// {
-//   user.user._id ? (
-//     <span>
-//       <Link to="/" onClick={handleLogOut}>
-//         Logout
-//       </Link>
-//     </span>
-//   ) : (
-//     <Link to="/login">Login/Register</Link>
-//   );
-// }
-
-{
-  /* <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="white"
-            aria-label="menu"
-          >
-            <Link to="/">Welcome!</Link>
-          </IconButton>
-          <IconButton color="inherit" aria-label="menu">
-            {user.user._id ? (
-              <span>
-                <Link to="/" onClick={handleLogOut}>
-                  Logout
-                </Link>
-              </span>
-            ) : (
-              <Link to="/login">Login/Register</Link>
-            )}
-          </IconButton>
-        </Toolbar> */
-}
-
-{
-  /* <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="white"
-            aria-label="menu"
-          >
-            <Link to="/">Welcome!</Link>
-          </IconButton>
-          <IconButton color="inherit" aria-label="menu">
-            {user.user._id ? (
-              <span>
-                <Link to="/" onClick={handleLogOut}>
-                  Logout
-                </Link>
-              </span>
-            ) : (
-              <Link to="/login">Login/Register</Link>
-            )}
-          </IconButton>
-        </Toolbar> */
-}
