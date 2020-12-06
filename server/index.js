@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const authRoutes = require("./api/authRoutes");
+const reportRoutes = require("./api/reportRoutes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -36,6 +37,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./passport")(passport);
 app.use("/auth", authRoutes);
+app.use("/report", reportRoutes);
 app.use("/api", require("./api"));
 
 app.listen(PORT, () => {
