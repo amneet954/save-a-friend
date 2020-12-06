@@ -55,7 +55,7 @@ class Authentication extends Component {
     return (
       <Container maxWidth="sm">
         <form onSubmit={this.login}>
-          <h1 className="textCenter" style={{ paddingLeft: "210px" }}>
+          <h1 className="textCenter" style={{ textAlign: "center" }}>
             Login
           </h1>
           <span style={{ paddingLeft: "100px" }}>
@@ -89,10 +89,11 @@ class Authentication extends Component {
           </span>
         </form>
         <br></br>
+        <h1 style={{ textAlign: "center" }}>or...</h1>
         <br></br>
         <form onSubmit={this.register}>
-          <h1 className="textCenter" style={{ paddingLeft: "200px" }}>
-            Or Sign Up!
+          <h1 className="textCenter" style={{ textAlign: "center" }}>
+            Sign Up!
           </h1>
           <div style={{ paddingLeft: "100px" }}>
             <input

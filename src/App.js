@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { NavBar, Authentication, Home } from "./components";
+import { CreateReportForm, NavBar, Authentication, Home } from "./components";
 
 const App = () => {
   return (
@@ -10,6 +10,7 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Authentication} />
+            <Route exact path="/newReport" component={CreateReportForm} />
             <Route
               exact
               path="*"

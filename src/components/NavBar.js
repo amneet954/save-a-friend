@@ -35,11 +35,12 @@ const NavBar = ({ user, handleLogOut }) => {
             </Link>
             &nbsp;&nbsp;
             <Link
-              to="/report"
+              to="/newReport"
               style={{ textDecoration: "none", color: "white" }}
             >
               Create Pet Alert
             </Link>
+            &nbsp;&nbsp;
             <Link
               to="/report"
               style={{ textDecoration: "none", color: "white" }}
