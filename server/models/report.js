@@ -7,7 +7,11 @@ const report = new Schema({
   lastPlaceSeen: String,
   lastTimeOfUpdate: String,
   contactEmail: String,
-  zipCode: String,
+  zipCode: Number,
+  geo: {
+    longitude: Number,
+    latitude: Number,
+  },
 });
 
 const Report = model("Report", report);
