@@ -5,6 +5,7 @@ import {
   Authentication,
   AllReports,
   Home,
+  Map,
 } from "./components";
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
             <Route exact path="/login" component={Authentication} />
             <Route exact path="/reports" component={AllReports} />
             <Route exact path="/newReport" component={CreateReportForm} />
+            <Route exact path="/map" component={Map} />
             <Route
               exact
               path="*"
