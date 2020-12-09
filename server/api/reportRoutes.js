@@ -3,10 +3,6 @@ const axios = require("axios");
 const { Report } = require("../models");
 let accessToken =
   "pk.eyJ1IjoiYW1uZWV0OTU0IiwiYSI6ImNqdjJpd215dzB5azIzeXFvZDMxbmk2ZDYifQ.FIIav70z0itM7EsJHAe_6A";
-// let address = "104-60 111th Street"
-// address = address.split(" ")
-// address = address.join("%20")
-// console.log(address)
 
 router.get("/:id", async (req, res, next) => {
   try {
