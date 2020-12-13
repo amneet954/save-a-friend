@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { gettingAllReports } from "../store";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import ReactMapGL, { Marker, GeolocateControl, Popup } from "react-map-gl";
 import { Link } from "react-router-dom";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
 let accessToken =
@@ -14,31 +14,35 @@ class Map extends Component {
       viewport: {
         width: 400,
         height: 400,
-        latitude: 40.68420971837575,
-        longitude: -73.83163001900016,
-        zoom: 14,
+        latitude: 40.69,
+        longitude: -73.8213,
+        zoom: 12,
       },
       selectedPet: "",
+      userLocation: {
+        long: 0,
+        lat: 0,
+      },
     };
     this.handleViewportChange = this.handleViewportChange.bind(this);
     this.mapPopUp = this.mapPopUp.bind(this);
     this.mapClose = this.mapClose.bind(this);
+    this.setUserLocation = this.setUserLocation.bind(this);
   }
 
   async componentDidMount() {
     let userId = this.props.userInfo._id;
-    await this.props.dispatchReport(userId);
+    if (!userId) this.props.history.push("/");
+    else await this.props.dispatchReport(userId);
   }
 
   handleViewportChange(viewport) {
-    // console.log(viewport);
     this.setState({
       viewport,
     });
   }
 
   mapPopUp(value) {
-    // event.preventDefault();
     this.setState(
       {
         selectedPet: value,
@@ -48,6 +52,7 @@ class Map extends Component {
       }
     );
   }
+
   mapClose() {
     this.setState(
       {
@@ -58,15 +63,41 @@ class Map extends Component {
       }
     );
   }
+
+  setUserLocation() {
+    console.log("bastard");
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position);
+      this.setState(
+        {
+          viewport: {
+            width: 400,
+            height: 400,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            zoom: 14,
+          },
+        },
+        console.log(this.state.viewport)
+      );
+    });
+  }
+
   render() {
     return (
       <div>
+        <button onClick={this.setUserLocation}>My Location</button>
         <ReactMapGL
           {...this.state.viewport}
           mapboxApiAccessToken={accessToken}
           mapStyle="mapbox://styles/mapbox/streets-v11"
           onViewportChange={(viewport) => this.handleViewportChange(viewport)}
         >
+          {/* <GeolocateControl
+            positionOptions={{ enableHighAccuracy: true, timeout: 10000 }}
+            trackUserLocation={true}
+            showUserLocation={true}
+          /> */}
           {Object.entries(this.props.report).map(([key, value]) => {
             return (
               <Marker
@@ -75,11 +106,21 @@ class Map extends Component {
                 longitude={value.geo.longitude}
               >
                 <div onMouseEnter={() => this.mapPopUp(value)}>
-                  <Brightness1Icon fontSize="small" />
+                  <img
+                    src="https://cdn.pixabay.com/photo/2020/07/24/15/05/button-5434253_1280.png"
+                    alt="Red Dot"
+                    style={{ width: "6%" }}
+                  />
                 </div>
               </Marker>
             );
           })}
+          <Marker
+            latitude={this.state.userLocation.lat}
+            longitude={this.state.userLocation.long}
+          >
+            I'm Here!!!
+          </Marker>
 
           {this.state.selectedPet.geo ? (
             <Popup
