@@ -37,7 +37,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "concurrently \"nodemon server arg\" \"react-scripts start arg\"",
+    "start": "concurrently \"nodemon backend arg\" \"react-scripts start arg\"",
     "build": "react-scripts build",
     "protoTest": "react-scripts test",
     "test": "react-scripts start",
