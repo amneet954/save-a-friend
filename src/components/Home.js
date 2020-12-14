@@ -1,9 +1,10 @@
 import { connect } from "react-redux";
 import { Button, Container } from "@material-ui/core";
+import { useSelector } from "react-redux";
 
-const Home = ({ user }) => {
-  let username = user.user.username;
-  console.log("HOME", user);
+const Home = () => {
+  const user = useSelector((state) => state.user);
+  const { username } = user;
   return (
     <Container maxWidth="sm">
       {username ? (
@@ -17,10 +18,4 @@ const Home = ({ user }) => {
   );
 };
 
-const mapState = (state) => {
-  return {
-    user: state,
-  };
-};
-
-export default connect(mapState)(Home);
+export default Home;
