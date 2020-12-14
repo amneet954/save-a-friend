@@ -1,60 +1,36 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { login, register } from "../store";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Button, Container } from "@material-ui/core";
 
-class Authentication extends Component {
-  constructor() {
-    super();
-    this.state = {
-      username: "",
-      password: "",
-      email: "",
-      zipCode: "",
-      data: "",
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.login = this.login.bind(this);
-    this.register = this.register.bind(this);
-  }
+const Authentication = () => {
+  const state = useSelector((state) => state);
+  const { user } = state;
+  const dispatch = useDispatch();
+  let [loginUsername, setLoginUsername] = useState("");
+  let [loginPassword, setLoginPassword] = useState("");
+  let [username, setUsername] = useState("");
+  let [password, setPassword] = useState("");
+  let [email, setEmail] = useState("");
+  let [zipCode, setZipCode] = useState("");
 
-  componentDidMount() {
-    let userId = this.props.userInfo.user._id;
-    if (userId) {
-      alert(`You are already logged in. Id: ${userId}`);
-      this.props.history.push("/");
-    }
-  }
-
-  handleChange(event) {
+  const loginUser = async (event) => {
     event.preventDefault();
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  }
+    await dispatch(login(loginUsername, loginPassword));
+  };
 
-  async login(event) {
+  const registerUser = async (event) => {
     event.preventDefault();
-    await this.props.dispatchUser(this.state.username, this.state.password);
-    this.props.history.push("/");
-  }
+    await dispatch(register(username, password, email, zipCode));
+  };
 
-  async register(event) {
-    event.preventDefault();
-    await this.props.dispatchNewUser(
-      this.state.username,
-      this.state.password,
-      this.state.email,
-      this.state.zipCode
-    );
-    await this.props.dispatchUser(this.state.username, this.state.password);
-    this.props.history.push("/");
-  }
-
-  render() {
+  if (user._id) {
+    console.log(user);
+    return <div>Profile component</div>;
+  } else {
     return (
       <Container maxWidth="sm">
-        <form onSubmit={this.login}>
+        <form onSubmit={loginUser}>
           <h1 className="textCenter" style={{ textAlign: "center" }}>
             Login
           </h1>
@@ -62,7 +38,7 @@ class Authentication extends Component {
             <input
               placeholder="username"
               name="username"
-              onChange={this.handleChange}
+              onChange={(event) => setLoginUsername(event.target.value)}
               required
             />
             <span style={{ paddingLeft: "5px" }}>
@@ -70,7 +46,7 @@ class Authentication extends Component {
                 placeholder="password"
                 type="password"
                 name="password"
-                onChange={this.handleChange}
+                onChange={(event) => setLoginPassword(event.target.value)}
                 required
               />
             </span>
@@ -91,7 +67,7 @@ class Authentication extends Component {
         <br></br>
         <h1 style={{ textAlign: "center" }}>or...</h1>
         <br></br>
-        <form onSubmit={this.register}>
+        <form onSubmit={registerUser}>
           <h1 className="textCenter" style={{ textAlign: "center" }}>
             Sign Up!
           </h1>
@@ -99,7 +75,7 @@ class Authentication extends Component {
             <input
               placeholder="Username"
               name="username"
-              onChange={this.handleChange}
+              onChange={(event) => setUsername(event.target.value)}
               required
             />
             <span style={{ paddingLeft: "5px" }}>
@@ -107,7 +83,7 @@ class Authentication extends Component {
                 placeholder="Password"
                 type="password"
                 name="password"
-                onChange={this.handleChange}
+                onChange={(event) => setPassword(event.target.value)}
                 required
               />
             </span>
@@ -116,7 +92,7 @@ class Authentication extends Component {
                 placeholder="Email Address"
                 type="email"
                 name="email"
-                onChange={this.handleChange}
+                onChange={(event) => setEmail(event.target.value)}
                 required
               />
             </span>
@@ -125,7 +101,7 @@ class Authentication extends Component {
                 placeholder="Zip Code"
                 type="text"
                 name="zipCode"
-                onChange={this.handleChange}
+                onChange={(event) => setZipCode(event.target.value)}
                 required
               />
             </span>
@@ -147,16 +123,6 @@ class Authentication extends Component {
       </Container>
     );
   }
-}
+};
 
-const mapState = (state) => ({
-  userInfo: state,
-});
-
-const mapDispatch = (dispatch) => ({
-  dispatchUser: (username, password) => dispatch(login(username, password)),
-  dispatchNewUser: (username, password, email, zipCode) =>
-    dispatch(register(username, password, email, zipCode)),
-});
-
-export default connect(mapState, mapDispatch)(Authentication);
+export default Authentication;

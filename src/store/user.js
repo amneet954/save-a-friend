@@ -74,7 +74,6 @@ export const logout = () => async (dispatch) => {
       url: "http://localhost:4000/auth/logout",
     });
     dispatch(removeUser());
-    // history.push('/login')
   } catch (err) {
     console.error(err);
   }
