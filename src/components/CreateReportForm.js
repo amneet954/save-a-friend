@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { reportCreation } from "../store";
 import { Button, Container } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const CreateReportForm = () => {
   let [petName, setPetName] = useState("");
@@ -61,6 +62,7 @@ const CreateReportForm = () => {
                 required
               />
             </div>
+
             <Button
               type="submit"
               color="inherit"
