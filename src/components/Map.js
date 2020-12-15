@@ -11,9 +11,28 @@ const Map = () => {
   const state = useSelector((state) => state);
   let { user, report } = state;
   const dispatch = useDispatch();
-  useEffect(() => dispatch(gettingAllReports(user._id)), []);
+  let [zipCodes, setZipCodes] = useState({});
 
-  let [viewPort, setViewPort] = useState({
+  useEffect(() => {
+    const dispatchingReports = async () => {
+      await dispatch(gettingAllReports(user._id));
+      let obj = {};
+      for (const [key, value] of Object.entries(report)) {
+        let { petName, geo, lastPlaceSeen, _id } = value;
+        if (obj[lastPlaceSeen])
+          obj[lastPlaceSeen].petNames.push(petName + "," + _id);
+        else {
+          let { petName, geo, lastPlaceSeen, _id } = value;
+          obj[lastPlaceSeen] = { geo, petNames: [petName + "," + _id] };
+        }
+      }
+
+      await setZipCodes(obj);
+    };
+    dispatchingReports();
+  }, []);
+
+  let [viewport, setviewport] = useState({
     width: 400,
     height: 400,
     latitude: 40.68420971837575,
@@ -22,11 +41,15 @@ const Map = () => {
   });
   let [selectedPet, setSelectedPet] = useState("");
 
-  const handleViewPortChange = (viewport) => {
-    setViewPort(viewport);
+  const handleViewportChange = (viewport) => {
+    setviewport(viewport);
   };
   const mapPopUp = (value) => {
-    setSelectedPet(value);
+    if (zipCodes[value.lastPlaceSeen]) {
+      value.pets = zipCodes[value.lastPlaceSeen].petNames;
+    }
+    let obj = { geo: value.geo, pets: value.pets };
+    setSelectedPet(obj);
   };
   const closeMapPopUp = () => {
     setSelectedPet("");
@@ -35,10 +58,10 @@ const Map = () => {
   return (
     <div>
       <ReactMapGL
-        {...viewPort}
+        {...viewport}
         mapboxApiAccessToken={accessToken}
         mapStyle="mapbox://styles/mapbox/streets-v11"
-        onViewportChange={(viewport) => handleViewPortChange(viewport)}
+        onViewportChange={(viewport) => handleViewportChange(viewport)}
       >
         {Object.entries(report).map(([key, value]) => {
           return (
@@ -53,7 +76,6 @@ const Map = () => {
             </Marker>
           );
         })}
-
         {selectedPet.geo ? (
           <Popup
             latitude={selectedPet.geo.latitude}
@@ -61,7 +83,17 @@ const Map = () => {
             onClose={closeMapPopUp}
           >
             <div>
-              <h2>{selectedPet.petName}</h2>
+              {selectedPet.pets.map((pet) => {
+                let petName = pet.slice(0, pet.indexOf(","));
+                let commaIdx = pet.indexOf(",") + 1;
+                let id = pet.slice(commaIdx);
+                console.log(id);
+                return (
+                  <div key={id}>
+                    <h2>{petName}</h2>
+                  </div>
+                );
+              })}
             </div>
           </Popup>
         ) : null}
@@ -69,4 +101,5 @@ const Map = () => {
     </div>
   );
 };
+
 export default Map;
