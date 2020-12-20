@@ -11,25 +11,12 @@ const Map = () => {
   const state = useSelector((state) => state);
   let { user, report } = state;
   const dispatch = useDispatch();
-  let [zipCodes, setZipCodes] = useState({});
+  let [selectedPet, setSelectedPet] = useState("");
 
   useEffect(() => {
-    const dispatchingReports = async () => {
-      await dispatch(gettingAllReports(user._id));
-      let obj = {};
-      for (const [key, value] of Object.entries(report)) {
-        let { petName, geo, lastPlaceSeen, _id } = value;
-        if (obj[lastPlaceSeen])
-          obj[lastPlaceSeen].petNames.push(petName + "," + _id);
-        else {
-          let { petName, geo, lastPlaceSeen, _id } = value;
-          obj[lastPlaceSeen] = { geo, petNames: [petName + "," + _id] };
-        }
-      }
-
-      await setZipCodes(obj);
-    };
-    dispatchingReports();
+    dispatch(gettingAllReports(user._id));
+    console.log(report);
+    console.log(typeof report);
   }, []);
 
   let [viewport, setviewport] = useState({
@@ -39,20 +26,26 @@ const Map = () => {
     longitude: -73.83163001900016,
     zoom: 14,
   });
-  let [selectedPet, setSelectedPet] = useState("");
 
   const handleViewportChange = (viewport) => {
     setviewport(viewport);
   };
-  const mapPopUp = (value) => {
-    if (zipCodes[value.lastPlaceSeen]) {
-      value.pets = zipCodes[value.lastPlaceSeen].petNames;
-    }
-    let obj = { geo: value.geo, pets: value.pets };
-    setSelectedPet(obj);
+  const mapPopUp = (oneReport) => {
+    setSelectedPet(oneReport);
   };
   const closeMapPopUp = () => {
     setSelectedPet("");
+  };
+  const handlemapView = (geo) => {
+    let latitude = geo.latitude;
+    let longitude = geo.longitude;
+    setviewport({
+      width: 400,
+      height: 400,
+      latitude,
+      longitude,
+      zoom: 14,
+    });
   };
 
   return (
@@ -63,43 +56,35 @@ const Map = () => {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         onViewportChange={(viewport) => handleViewportChange(viewport)}
       >
-        {Object.entries(zipCodes).map(([key, value]) => {
-          console.log("latitude", value.geo);
-          console.log("key", key);
+        {Object.entries(report).map((singleReport, idx) => {
+          let oneReport = singleReport[1];
           return (
-            <Marker
-              key={key}
-              latitude={value.geo.latitude || null}
-              longitude={value.geo.longitude | null}
-            >
-              <div onMouseEnter={() => mapPopUp(value)}>
-                <Brightness1Icon fontSize="small" />
-              </div>
-            </Marker>
+            <span onMouseEnter={() => mapPopUp(oneReport)}>
+              <Marker
+                key={"Marker" + idx}
+                latitude={oneReport.geo.latitude}
+                longitude={oneReport.geo.longitude}
+                style={{ position: "relative" }}
+              >
+                <span onClick={() => handlemapView(oneReport.geo)}>
+                  <Brightness1Icon fontSize="small" />
+                </span>
+              </Marker>
+              {selectedPet.geo ? (
+                <Popup
+                  key={"PopUp" + idx}
+                  latitude={selectedPet.geo.latitude}
+                  longitude={selectedPet.geo.longitude}
+                  onClose={closeMapPopUp}
+                >
+                  <h2>{selectedPet.petName}</h2>
+                </Popup>
+              ) : null}
+            </span>
           );
         })}
-        {selectedPet.geo ? (
-          <Popup
-            latitude={selectedPet.geo.latitude || null}
-            longitude={selectedPet.geo.longitude || null}
-            onClose={closeMapPopUp}
-          >
-            {/* <div> */}
-            {selectedPet.pets.map((pet) => {
-              let petName = pet.slice(0, pet.indexOf(","));
-              let commaIdx = pet.indexOf(",") + 1;
-              let id = pet.slice(commaIdx);
-              console.log(id);
-              return (
-                <div key={id}>
-                  <h2>{petName}</h2>
-                </div>
-              );
-            })}
-            {/* </div> */}
-          </Popup>
-        ) : null}
       </ReactMapGL>
+      {selectedPet.geo ? <h1>{selectedPet.petName}</h1> : null}
     </div>
   );
 };
