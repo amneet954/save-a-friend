@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { login, register } from "../store";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Container } from "@material-ui/core";
-
+import { Link, Redirect } from "react-router-dom";
 const Authentication = () => {
   const state = useSelector((state) => state);
   const { user } = state;
@@ -26,7 +26,8 @@ const Authentication = () => {
 
   if (user._id) {
     console.log(user);
-    return <div>Profile component</div>;
+    // return <div>Profile component</div>;
+    return <Redirect to="/map" />;
   } else {
     return (
       <Container maxWidth="sm">

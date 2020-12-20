@@ -2,32 +2,49 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { reportCreation } from "../store";
 import { Button, Container } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const CreateReportForm = () => {
   let [petName, setPetName] = useState("");
   let [lastPlaceSeen, setLastPlace] = useState("");
   let [contactEmail, setContactEmail] = useState("");
   let [zipCode, setZipCode] = useState("");
-
+  let [redirect, setRedirect] = useState(false);
   const user = useSelector((state) => state.user);
+  const allState = useSelector((state) => state);
   const dispatch = useDispatch();
   const { _id, username } = user;
 
-  const createReport = (event) => {
-    event.preventDefault();
+  const createReport = () => {
     const userId = _id;
     dispatch(
       reportCreation(userId, petName, lastPlaceSeen, contactEmail, zipCode)
     );
+    alert("Report Sucessfully Created");
+    setRedirect(true);
   };
 
-  if (username) {
+  useEffect(() => {
+    if (redirect === true) {
+      setRedirect(false);
+    }
+  }, []);
+
+  if (redirect === true) {
+    return <Redirect to="map" />;
+  } else if (username) {
+    console.log(allState);
     return (
       <div>
         <h1>Hi {username}, let's save your pet!</h1>
         <Container maxWidth="sm">
-          <form onSubmit={createReport}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              createReport();
+              <Redirect to="/map" />;
+            }}
+          >
             <div>
               <label htmlFor="Pet's Name">Pet's name: </label>
               <input
