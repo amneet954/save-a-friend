@@ -4,12 +4,13 @@ import thunkMiddleware from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import user from "./user";
 import report from "./report";
+import allReportsReducer from "./allReportsReducer";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 
-const reducer = combineReducers({ user, report });
+const reducer = combineReducers({ user, report, allReportsReducer });
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
 );
@@ -25,3 +26,4 @@ export const store = createStore(pReducer, middleware);
 export const persistor = persistStore(store);
 export * from "./user";
 export * from "./report";
+export * from "./allReportsReducer";

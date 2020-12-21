@@ -25,7 +25,6 @@ const Authentication = () => {
   };
 
   if (user._id) {
-    console.log(user);
     // return <div>Profile component</div>;
     return <Redirect to="/map" />;
   } else {

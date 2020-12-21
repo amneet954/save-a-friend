@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { reportCreation } from "../store";
+import { reportCreation, gettingAllReports } from "../store";
 import { Button, Container } from "@material-ui/core";
 import { Link, Redirect } from "react-router-dom";
 
@@ -15,12 +15,13 @@ const CreateReportForm = () => {
   const dispatch = useDispatch();
   const { _id, username } = user;
 
-  const createReport = () => {
+  const createReport = async () => {
     const userId = _id;
-    dispatch(
+    await dispatch(
       reportCreation(userId, petName, lastPlaceSeen, contactEmail, zipCode)
     );
     alert("Report Sucessfully Created");
+    // dispatch(gettingAllReports(userId));
     setRedirect(true);
   };
 
@@ -33,7 +34,7 @@ const CreateReportForm = () => {
   if (redirect === true) {
     return <Redirect to="map" />;
   } else if (username) {
-    console.log(allState);
+    // console.log(allState);
     return (
       <div>
         <h1>Hi {username}, let's save your pet!</h1>

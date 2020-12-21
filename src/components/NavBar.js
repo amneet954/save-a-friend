@@ -51,6 +51,9 @@ const NavBar = () => {
             >
               Pet Status
             </Link>
+            <Link to="/map" style={{ textDecoration: "none", color: "white" }}>
+              Your Map
+            </Link>
           </Typography>
           {state.user._id ? (
             <Link
