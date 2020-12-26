@@ -14,6 +14,7 @@ const session = require("express-session");
 mongoose.connect(`mongodb://localhost:27017/save-a-friend`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 //Middleware
@@ -32,6 +33,7 @@ app.use(
     saveUninitialized: true,
   })
 );
+
 app.use(cookieParser("secretCode"));
 app.use(passport.initialize());
 app.use(passport.session());

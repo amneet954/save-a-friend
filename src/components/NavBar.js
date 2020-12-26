@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 import { logout } from "../store";
 import {
   AppBar,
-  IconButton,
   Typography,
   Button,
   Toolbar,
+  InputBase,
 } from "@material-ui/core";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import { makeStyles } from "@material-ui/core/styles";
+import SearchIcon from "@material-ui/icons/Search";
+import { makeStyles, fade } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +21,52 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  navBarLink: {
+    textDecoration: "none",
+    color: "white",
+    paddingRight: "5%",
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.25),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.35),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+  },
+  outSearchLayer: {
+    paddingRight: "5%",
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
 }));
 
 const NavBar = () => {
@@ -29,45 +75,71 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const logOut = async () => await dispatch(logout());
 
+  const unauthNavLinks = [
+    {
+      link: "/",
+      title: "Welcome",
+    },
+    {
+      link: "/reports",
+      title: "All Lost Friends",
+    },
+    {
+      link: "/foundFriends",
+      title: "Community Accomplishments",
+    },
+    {
+      link: "/newReport",
+      title: "Create an Alert",
+    },
+    {
+      link: "/map",
+      title: "Map",
+    },
+    {
+      link: "/aboutUs",
+      title: "About Us",
+    },
+    {
+      link: "/fileUpload",
+      title: "Upload Test",
+    },
+  ];
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-              Welcome
-            </Link>
-            &nbsp;&nbsp;
-            <Link
-              to="/newReport"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              Create Pet Alert
-            </Link>
-            &nbsp;&nbsp;
-            <Link
-              to="/reports"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              Pet Status
-            </Link>
-            <Link to="/map" style={{ textDecoration: "none", color: "white" }}>
-              Your Map
-            </Link>
+          <Typography className={classes.title}>
+            {unauthNavLinks.map((link) => (
+              <Link to={link.link} className={classes.navBarLink}>
+                {link.title}
+              </Link>
+            ))}
           </Typography>
           {state.user._id ? (
-            <Link
-              to="/"
-              style={{ textDecoration: "none", color: "white" }}
-              onClick={logOut}
-            >
+            <div className={classes.outSearchLayer}>
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder="Search…"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ "aria-label": "search" }}
+                />
+              </div>
+            </div>
+          ) : null}
+          {state.user._id ? (
+            <Link to="/" className={classes.navBarLink} onClick={logOut}>
               <Button color="inherit">Logout</Button>
             </Link>
           ) : (
-            <Link
-              to="/login"
-              style={{ textDecoration: "none", color: "white" }}
-            >
+            <Link to="/login" className={classes.navBarLink}>
               <Button color="inherit">Login/Sign Up</Button>
             </Link>
           )}

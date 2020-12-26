@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   CreateReportForm,
   NavBar,
@@ -6,9 +7,36 @@ import {
   AllReports,
   Home,
   Map,
+  FileUpload,
 } from "./components";
+import { Typography, Container } from "@material-ui/core";
+import { makeStyles, fade } from "@material-ui/core/styles";
+const useStyles = makeStyles((theme) => ({
+  footer: {
+    padding: theme.spacing(3, 2),
+    // marginTop: "auto",
+    marginTop: "8%",
+    backgroundColor:
+      theme.palette.type === "light"
+        ? theme.palette.grey[200]
+        : theme.palette.grey[800],
+  },
+}));
 
+const Copyright = () => {
+  return (
+    <Typography variant="body2" color="textSecondary">
+      {"Copyright © "}
+      <Link color="inherit" href="https://material-ui.com/">
+        Your Website
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+};
 const App = () => {
+  const classes = useStyles();
   return (
     <BrowserRouter>
       <div>
@@ -20,6 +48,7 @@ const App = () => {
             <Route exact path="/reports" component={AllReports} />
             <Route exact path="/newReport" component={CreateReportForm} />
             <Route exact path="/map" component={Map} />
+            <Route exact path="/fileUpload" component={FileUpload} />
             <Route
               exact
               path="*"
@@ -31,6 +60,14 @@ const App = () => {
             />
           </Switch>
         </main>
+        <footer className={classes.footer}>
+          <Container maxWidth="sm">
+            <Typography variant="body1">
+              My sticky footer can be found here.
+            </Typography>
+            <Copyright />
+          </Container>
+        </footer>
       </div>
     </BrowserRouter>
   );
