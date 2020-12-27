@@ -12,7 +12,18 @@ const report = new Schema({
     longitude: Number,
     latitude: Number,
   },
-  petImage: { data: Buffer, contentType: String },
+  petImageName: {
+    required: true,
+    type: String,
+  },
+  petImageId: {
+    required: true,
+    type: String,
+  },
+  createdAt: {
+    default: Date.now(),
+    type: Date,
+  },
 });
 
 const Report = model("Report", report);
