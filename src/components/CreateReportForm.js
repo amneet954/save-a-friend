@@ -15,6 +15,9 @@ const CreateReportForm = () => {
   const dispatch = useDispatch();
   const { _id, username } = user;
 
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
+  const [uploadedImage, setUploadedImage] = useState({});
+
   const createReport = async () => {
     const userId = _id;
     await dispatch(
@@ -30,6 +33,18 @@ const CreateReportForm = () => {
       setRedirect(false);
     }
   }, []);
+
+  const uploadImage = async () => {
+    try {
+      if (!uploadedImage.name) alert("Image Upload Failed");
+
+      let formData = new FormData();
+      formData.append("file", uploadedImage);
+      console.log("Form Data: ", formData.get("file"));
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
 
   if (redirect === true) {
     return <Redirect to="map" />;
@@ -80,7 +95,23 @@ const CreateReportForm = () => {
                 required
               />
             </div>
-
+            <input
+              type="file"
+              onChange={(event) => {
+                setUploadedImageUrl(URL.createObjectURL(event.target.files[0]));
+                setUploadedImage(event.target.files[0]);
+              }}
+            />
+            <img
+              src={
+                !uploadedImageUrl.trim()
+                  ? "Please Upload an Image"
+                  : uploadedImageUrl
+              }
+              style={{ width: "500px" }}
+              alt="upload"
+            />
+            <button onClick={uploadImage}>Test Image State</button>
             <Button
               type="submit"
               color="inherit"
