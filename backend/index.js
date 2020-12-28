@@ -10,6 +10,12 @@ const passport = require("passport");
 const PORT = 4000;
 const session = require("express-session");
 
+const path = require("path");
+const multer = require("multer");
+const GridFsStorage = require("multer-gridfs-storage");
+const crypto = require("crypto");
+const logger = require("morgan");
+
 //Mongoose Connection
 mongoose.connect(`mongodb://localhost:27017/save-a-friend`, {
   useNewUrlParser: true,
@@ -18,8 +24,10 @@ mongoose.connect(`mongodb://localhost:27017/save-a-friend`, {
 });
 
 //Middleware
+app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -39,8 +47,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./passport")(passport);
 app.use("/auth", authRoutes);
+
 app.use("/report", reportRoutes);
-app.use("/api", require("./api"));
+app.use("/api", require("./api")); //error handling
 
 app.listen(PORT, () => {
   console.log(`Listening on PORT ${PORT}`);

@@ -3,7 +3,127 @@ const axios = require("axios");
 const { Report } = require("../models");
 let accessToken =
   "pk.eyJ1IjoiYW1uZWV0OTU0IiwiYSI6ImNqdjJpd215dzB5azIzeXFvZDMxbmk2ZDYifQ.FIIav70z0itM7EsJHAe_6A";
+const path = require("path");
+const multer = require("multer");
+const GridFsStorage = require("multer-gridfs-storage");
+const crypto = require("crypto");
+const mongoose = require("mongoose");
+let url = `mongodb://localhost:27017/save-a-friend`;
+const storage = new GridFsStorage({
+  url,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        const filename = buf.toString("hex") + path.extname(file.originalname);
+        const fileInfo = {
+          filename: filename,
+          bucketName: "uploads",
+        };
+        resolve(fileInfo);
+      });
+    });
+  },
+});
 
+const upload = multer({ storage });
+
+let connect = mongoose.createConnection(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+let gfs;
+
+connect.once("open", () => {
+  // initialize stream
+  gfs = new mongoose.mongo.GridFSBucket(connect.db, {
+    bucketName: "uploads",
+  });
+});
+
+router.get("/test", async (req, res) => {
+  try {
+    // const query = await Report.findOne({
+    //   userId: "5fcb1f6be50d881ab64001f3",
+    //   petName: "Rory",
+    // });
+
+    // res.send(query);
+
+    gfs
+      .find({ filename: "9be3520c306b4d974f49197efcf38a23.jpg" })
+      .toArray((err, files) => {
+        if (!files[0] || files.length === 0) {
+          return res.status(200).json({
+            success: false,
+            message: "No files available",
+          });
+        }
+
+        res.status(200).json({
+          success: true,
+          file: files[0],
+        });
+      });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/test/:id", async (req, res) => {
+  try {
+    gfs.find({ filename: req.params.id }).toArray((err, files) => {
+      if (!files[0] || files.length === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "No files available",
+        });
+      }
+      // console.log("FILES: ", files)
+      if (
+        files[0].contentType === "image/jpeg" ||
+        files[0].contentType === "image/png" ||
+        files[0].contentType === "image/svg+xml"
+      ) {
+        // render image to browser
+        gfs.openDownloadStreamByName(req.params.id).pipe(res);
+      } else {
+        res.status(404).json({
+          err: "Not an image",
+        });
+      }
+    });
+
+    // imageRouter.route("/image/:filename").get((req, res, next) => {
+    //   gfs.find({ filename: req.params.filename }).toArray((err, files) => {
+    //     if (!files[0] || files.length === 0) {
+    //       return res.status(200).json({
+    //         success: false,
+    //         message: "No files available",
+    //       });
+    //     }
+
+    //     if (
+    //       files[0].contentType === "image/jpeg" ||
+    //       files[0].contentType === "image/png" ||
+    //       files[0].contentType === "image/svg+xml"
+    //     ) {
+    //       // render image to browser
+    //       gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+    //     } else {
+    //       res.status(404).json({
+    //         err: "Not an image",
+    //       });
+    //     }
+    //   });
+    // });
+  } catch (error) {
+    console.log(error);
+  }
+});
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -14,30 +134,18 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// router.get("/geo/:address", async (req, res) => {
-//   let { address } = req.params;
-//   const coordinates = await axios({
-//     method: "GET",
-//     url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?country=US&access_token=${accessToken}`,
-//   });
-
-//   const { data } = coordinates;
-//   let place = data.features[0].place_name;
-//   // const longitude = values[0];
-//   // const latitude = values[1];
-//   res.send(place);
-// });
-
 router.post("/", async (req, res, next) => {
   try {
+    // let petImageId = req.file.id;
+    // let petImageName = req.file.filename;
+
     let { userId, petName, lastPlaceSeen, contactEmail, zipCode } = req.body;
     let address = lastPlaceSeen.split(" ").join("%20");
-
-    let dateObj = new Date();
-    let month = dateObj.getUTCMonth() + 1; //months from 1-12
-    let day = dateObj.getUTCDate();
-    let year = dateObj.getUTCFullYear();
-    let date = month + "/" + day + "/" + year;
+    // let dateObj = new Date();
+    // let month = dateObj.getUTCMonth() + 1; //months from 1-12
+    // let day = dateObj.getUTCDate();
+    // let year = dateObj.getUTCFullYear();
+    // let date = month + "/" + day + "/" + year;
     const coordinates = await axios({
       method: "GET",
       url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?country=US&access_token=${accessToken}`,
@@ -54,15 +162,54 @@ router.post("/", async (req, res, next) => {
       userId,
       petName,
       lastPlaceSeen,
-      lastTimeOfUpdate: date,
       contactEmail,
       zipCode,
       geo,
+      // petImageId,
+      // petImageName,
     });
     await newReport.save();
     res.send(newReport);
   } catch (error) {
     console.log(error);
+  }
+});
+
+//http://localhost:4000/report/file
+router.route("/file").post(upload.single("file"), async (req, res, next) => {
+  try {
+    let { userId, petName, lastPlaceSeen, contactEmail, zipCode } = req.body;
+    let petImageId = req.file.id;
+    let petImageName = req.file.filename;
+
+    let address = lastPlaceSeen.split(" ").join("%20");
+
+    const coordinates = await axios({
+      method: "GET",
+      url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?country=US&access_token=${accessToken}`,
+    });
+
+    const { data } = coordinates;
+    lastPlaceSeen = data.features[0].place_name;
+    let values = data.features[0].geometry.coordinates;
+    const longitude = values[0];
+    const latitude = values[1];
+    let geo = { longitude, latitude };
+
+    const newReport = await new Report({
+      userId,
+      petName,
+      lastPlaceSeen,
+      contactEmail,
+      zipCode,
+      geo,
+      petImageId,
+      petImageName,
+    });
+    await newReport.save();
+    res.send(newReport);
+  } catch (error) {
+    console.log("Error: ", error);
   }
 });
 
