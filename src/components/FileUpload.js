@@ -1,54 +1,38 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { reportCreation, gettingAllReports } from "../store";
+import { Button, Container } from "@material-ui/core";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 
-class FileUpload extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      file: null,
-    };
-    this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.onChange = this.onChange.bind(this);
-  }
-  onFormSubmit(e) {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("myfile", this.state.file);
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    };
-    axios
-      .post("http://localhost:4000/upload", formData, config)
-      .then((response) => {
-        alert("The file is successfully uploaded");
-      })
-      .catch((error) => {});
-  }
+const FileUpload = () => {
+  const [imageObj, setImageObj] = useState({});
+  const getReport = async () => {
+    const response = await axios({
+      method: "GET",
+      baseURL: "http://localhost:4000/report/test",
+    });
 
-  onChange(e) {
-    this.setState({ file: e.target.files });
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.onFormSubmit}>
-        <h1>File Upload</h1>
-        <input
-          type="file"
-          className="custom-file-input"
-          name="myImage"
-          onChange={this.onChange}
+    console.log(response);
+    console.log("IMAGE: ", response.data.file);
+    setImageObj(response.data.file);
+  };
+  useEffect(() => {
+    getReport();
+  }, []);
+  return (
+    <div>
+      <h1>hi</h1>
+      <button onClick={() => console.log(imageObj)}>test</button>
+      {imageObj.filename ? (
+        <img
+          src={"http://localhost:4000/report/test/" + imageObj.filename}
+          alt="recent"
+          style={{ width: "500px" }}
         />
-        {console.log(this.state.file)}
-        <button className="upload-button" type="submit">
-          Upload to DB
-        </button>
-      </form>
-    );
-  }
-}
+      ) : null}
+    </div>
+  );
+};
 
 export default FileUpload;

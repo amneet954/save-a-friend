@@ -5,7 +5,10 @@ const report = new Schema({
   userId: String,
   petName: String,
   lastPlaceSeen: String,
-  lastTimeOfUpdate: String,
+  lastTimeOfUpdate: {
+    default: Date.now(),
+    type: Date,
+  },
   contactEmail: String,
   zipCode: Number,
   geo: {
@@ -13,10 +16,12 @@ const report = new Schema({
     latitude: Number,
   },
   petImageName: {
+    default: "test",
     required: true,
     type: String,
   },
   petImageId: {
+    default: "test",
     required: true,
     type: String,
   },

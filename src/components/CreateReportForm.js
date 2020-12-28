@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { reportCreation, gettingAllReports } from "../store";
 import { Button, Container } from "@material-ui/core";
 import { Link, Redirect } from "react-router-dom";
+import axios from "axios";
 
 const CreateReportForm = () => {
   let [petName, setPetName] = useState("");
@@ -19,13 +20,26 @@ const CreateReportForm = () => {
   const [uploadedImage, setUploadedImage] = useState({});
 
   const createReport = async () => {
-    const userId = _id;
-    await dispatch(
-      reportCreation(userId, petName, lastPlaceSeen, contactEmail, zipCode)
-    );
-    alert("Report Sucessfully Created");
-    // dispatch(gettingAllReports(userId));
-    setRedirect(true);
+    console.log("precious time glory days");
+    // const userId = _id;
+    // if (!uploadedImage.name) alert("Image Upload Failed");
+
+    // let formData = new FormData();
+    // formData.append("file", uploadedImage);
+    // console.log("Form Data: ", formData.get("file"));
+    // await dispatch(
+    //   reportCreation(
+    //     userId,
+    //     petName,
+    //     lastPlaceSeen,
+    //     contactEmail,
+    //     zipCode,
+    //     formData
+    //   )
+    // );
+    // alert("Report Sucessfully Created");
+    // // dispatch(gettingAllReports(userId));
+    // setRedirect(true);
   };
 
   useEffect(() => {
@@ -40,7 +54,24 @@ const CreateReportForm = () => {
 
       let formData = new FormData();
       formData.append("file", uploadedImage);
-      console.log("Form Data: ", formData.get("file"));
+      const userId = _id;
+      formData.append("userId", userId);
+      formData.append("petName", petName);
+      formData.append("lastPlaceSeen", lastPlaceSeen);
+      formData.append("contactEmail", contactEmail);
+      formData.append("zipCode", zipCode);
+      // console.log("Form Data: ", formData.get("file"));
+      // console.log("UserID:  ", formData.get("userId"));
+      axios
+        .post("http://localhost:4000/report/file", formData)
+        .then((response) => {
+          console.log("RESPONSE: ", response);
+          response.data.success
+            ? alert("File successfully uploaded")
+            : alert("File already exists");
+          // this.fetchRecent();
+        })
+        .catch((err) => alert("Error: " + err));
     } catch (error) {
       console.log("Error: ", error);
     }
