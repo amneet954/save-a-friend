@@ -21,14 +21,14 @@ const Map = () => {
 
     for (let i = 0; i < allReportsReducer.length; i++) {
       let current = allReportsReducer[i];
-      let { geo, petName } = current;
+      let { geo, petName, _id } = current;
       let { longitude, latitude } = geo;
       longitude = Number(longitude.toFixed(6));
       latitude = Number(latitude.toFixed(6));
       let value = `${longitude},${latitude}`;
 
-      if (!obj[value]) obj[value] = [petName];
-      else obj[value].push(petName);
+      if (!obj[value]) obj[value] = [petName + " " + _id];
+      else obj[value].push(petName + " " + _id);
     }
     setZipCodes(obj);
   };
@@ -86,6 +86,9 @@ const Map = () => {
     options: { radius: 75, maxZoom: 20 },
   });
 
+  const [selectedObj, setSelectObj] = useState({});
+  const [multSelectedObj, setMultObjs] = useState({});
+
   return (
     <div>
       <ReactMapGL
@@ -133,13 +136,40 @@ const Map = () => {
                       }),
                       transitionDuration: "auto",
                     });
+                    let coords = cluster.geometry.coordinates;
+                    let long = coords[0].toFixed(6).toString();
+                    let lat = coords[1].toFixed(6).toString();
+
+                    if (zipCodes[long + "," + lat]) {
+                      let values = zipCodes[long + "," + lat];
+                      let arrObj = [];
+                      let obj23 = {
+                        names: values,
+                        long: Number(long),
+                        lat: Number(lat),
+                      };
+
+                      values.map((value) => {
+                        let lastIdx = value.indexOf(" ");
+                        let name = value.slice(0, lastIdx);
+                        let id = value.slice(lastIdx + 1);
+                        arrObj.push({
+                          id,
+                          name,
+                          long: Number(long),
+                          lat: Number(lat),
+                        });
+                      });
+                      setMultObjs(obj23);
+                      console.log(obj23);
+                    }
                   }}
                 >
-                  {zipCodes[`${longitude},${latitude}`] && viewport.zoom > 15
-                    ? zipCodes[`${longitude},${latitude}`].map((value) => (
-                        <h1>{value}</h1>
-                      ))
-                    : null}
+                  {/* {zipCodes[`${longitude},${latitude}`] && viewport.zoom > 15
+                    ? zipCodes[`${longitude},${latitude}`].map((value, idx) => {
+                        return <h1 key={idx}>{value}</h1>;
+                      })
+                    : null} */}
                   <Brightness1Icon fontSize="small" />
                   {pointCount}
                 </div>
@@ -152,13 +182,71 @@ const Map = () => {
               latitude={latitude}
               longitude={longitude}
             >
-              <div onClick={() => console.log(cluster.geometry)}>
+              <div
+                onClick={() => {
+                  let long = cluster.geometry.coordinates[0].toString();
+                  let lat = cluster.geometry.coordinates[1].toString();
+                  if (zipCodes[long + "," + lat]) {
+                    let value = zipCodes[long + "," + lat][0];
+                    let lastIdx = value.indexOf(" ");
+                    let name = value.slice(0, lastIdx);
+                    let id = value.slice(lastIdx + 1);
+
+                    setSelectObj({ id, name, long, lat });
+                  }
+                }}
+              >
                 <Brightness1Icon fontSize="small" />
               </div>
             </Marker>
           );
         })}
+        {multSelectedObj.names ? (
+          <Popup
+            latitude={multSelectedObj.lat}
+            longitude={multSelectedObj.long}
+            onClose={() => {
+              setViewport({
+                width: 750,
+                height: 750,
+                zoom: 8,
+                latitude: multSelectedObj.lat,
+                longitude: multSelectedObj.long,
+              });
+              setMultObjs({});
+            }}
+          >
+            {multSelectedObj.names.map((value, idx) => {
+              let lastIdx = value.indexOf(" ");
+              let name = value.slice(0, lastIdx);
+              let id = value.slice(lastIdx + 1);
+              return (
+                <Link to={`/pet/${id}`}>
+                  <h3 key={idx}>{name}</h3>
+                </Link>
+              );
+            })}
+          </Popup>
+        ) : null}
+        {selectedObj.id ? (
+          <Popup
+            latitude={Number(selectedObj.lat)}
+            longitude={Number(selectedObj.long)}
+            onClose={() => {
+              setSelectObj({});
+              setViewport({
+                ...viewport,
+                zoom: 8,
+              });
+            }}
+          >
+            <Link to="/fileUpload">
+              <h2>{selectedObj.name}</h2>
+            </Link>
+          </Popup>
+        ) : null}
       </ReactMapGL>
+      {selectedObj.id ? <h1>just a small town girl</h1> : <h2>nope</h2>}
     </div>
   );
 };

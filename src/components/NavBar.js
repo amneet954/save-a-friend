@@ -111,8 +111,8 @@ const NavBar = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title}>
-            {unauthNavLinks.map((link) => (
-              <Link to={link.link} className={classes.navBarLink}>
+            {unauthNavLinks.map((link, idx) => (
+              <Link key={idx} to={link.link} className={classes.navBarLink}>
                 {link.title}
               </Link>
             ))}
