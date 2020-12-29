@@ -44,52 +44,54 @@ connect.once("open", () => {
   });
 });
 
-router.get("/test", async (req, res) => {
+router.get("/pet/:petId", async (req, res) => {
   try {
-    // const query = await Report.findOne({
-    //   userId: "5fcb1f6be50d881ab64001f3",
-    //   petName: "Rory",
-    // });
+    const { petId } = req.params;
 
-    // res.send(query);
+    const query = await Report.findOne({
+      _id: petId,
+    });
 
-    gfs
-      .find({ filename: "9be3520c306b4d974f49197efcf38a23.jpg" })
-      .toArray((err, files) => {
-        if (!files[0] || files.length === 0) {
-          return res.status(200).json({
-            success: false,
-            message: "No files available",
-          });
-        }
+    const { petImageName } = query;
 
-        res.status(200).json({
-          success: true,
-          file: files[0],
-        });
-      });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-router.get("/test/:id", async (req, res) => {
-  try {
-    gfs.find({ filename: req.params.id }).toArray((err, files) => {
+    gfs.find({ filename: petImageName }).toArray((err, files) => {
       if (!files[0] || files.length === 0) {
         return res.status(200).json({
           success: false,
           message: "No files available",
         });
       }
-      // console.log("FILES: ", files)
+
+      res.status(200).json({
+        success: true,
+        file: files[0],
+        query,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//ONLY TO GENERATE IMAGE ON FRONT END SIDE. DON'T USE POSTMAN
+router.get("/pet/:petId/:id", async (req, res) => {
+  try {
+    const { id, petId } = req.params;
+    gfs.find({ filename: id }).toArray((err, files) => {
+      if (!files[0] || files.length === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "No files available",
+        });
+      }
+
       if (
         files[0].contentType === "image/jpeg" ||
         files[0].contentType === "image/png" ||
         files[0].contentType === "image/svg+xml"
       ) {
         // render image to browser
-        gfs.openDownloadStreamByName(req.params.id).pipe(res);
+        gfs.openDownloadStreamByName(id).pipe(res);
       } else {
         res.status(404).json({
           err: "Not an image",
