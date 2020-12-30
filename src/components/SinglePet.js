@@ -6,7 +6,7 @@ import { Link, Redirect } from "react-router-dom";
 import { gettingSingleReport } from "../store";
 import axios from "axios";
 
-const FileUpload = ({ match }) => {
+const SinglePet = ({ match }) => {
   const allState = useSelector((state) => state);
   const dispatch = useDispatch();
   const { report } = allState;
@@ -33,4 +33,4 @@ const FileUpload = ({ match }) => {
   );
 };
 
-export default FileUpload;
+export default SinglePet;

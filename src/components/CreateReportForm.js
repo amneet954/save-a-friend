@@ -1,39 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { reportCreation, gettingAllReports } from "../store";
+import { reportCreation } from "../store";
 import { Button, Container } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 import { Link, Redirect } from "react-router-dom";
-import axios from "axios";
+import useStyles from "./style/index.js";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-  },
-  formCenter: {
-    margin: "auto",
-    width: "800px",
-  },
-  textFieldCenter: {
-    width: "50%;",
-    margin: "auto",
-    display: "block",
-  },
-  buttonCenter: {
-    margin: "auto",
-    display: "block",
-  },
-  formControl: {
-    margin: "auto",
-    width: "50%;",
-    display: "block",
-  },
-  title: { textAlign: "center" },
-}));
 const CreateReportForm = () => {
   let [petName, setPetName] = useState("");
   let [lastPlaceSeen, setLastPlace] = useState("");
@@ -103,25 +75,29 @@ const CreateReportForm = () => {
 
   const fields = [
     {
-      value: "Pet's Name",
+      value: petName,
+      label: "Pet's Name",
       eventName: "petName",
       type: "text",
       function: setPetName,
     },
     {
-      value: "Last Seen",
+      value: lastPlaceSeen,
+      label: "Last Seen",
       eventName: "lastPlaceSeen",
       type: "text",
       function: setLastPlace,
     },
     {
-      value: "ZipCode",
+      value: zipCode,
+      label: "ZipCode",
       eventName: "zipCode",
       type: "text",
       function: setZipCode,
     },
     {
-      value: "Contact Email Address",
+      value: contactEmail,
+      label: "Contact Email",
       eventName: "contactEmail",
       type: "email",
       function: setContactEmail,
@@ -134,56 +110,42 @@ const CreateReportForm = () => {
     // console.log(allState);
     return (
       <div>
-        <h1>Hi {username}, let's save your pet!</h1>
+        <h1 className={classes.title}>Hi {username}, let's save your pet!</h1>
         <Container maxWidth="sm">
           <form
+            // className={classes.formCenter}
             onSubmit={(event) => {
               event.preventDefault();
               createReport();
               <Redirect to="/map" />;
             }}
           >
-            <div>
-              <label htmlFor="Pet's Name">Pet's name: </label>
-              <input
-                name="petName"
-                onChange={(event) => setPetName(event.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="Last Seen">Last Seen: </label>
-              <input
-                name="lastPlaceSeen"
-                onChange={(event) => setLastPlace(event.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="Zip Code">Zip Code: </label>
-              <input
-                name="zipCode"
-                onChange={(event) => setZipCode(event.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="Contact Email Address">
-                Contact Email Address:{" "}
-              </label>
-              <input
-                name="contactEmail"
-                onChange={(event) => setContactEmail(event.target.value)}
-                required
-              />
-            </div>
+            {fields.map((field, idx) => {
+              return (
+                <div key={idx}>
+                  <TextField
+                    name={field.name}
+                    type={field.type}
+                    label={field.label}
+                    value={field.value}
+                    required
+                    fullWidth
+                    onChange={(event) => field.function(event.target.value)}
+                    className={classes.textFieldCenter}
+                  />
+                  <br />
+                </div>
+              );
+            })}
             <input
+              className={classes.textFieldCenter}
               type="file"
               onChange={(event) => {
                 setUploadedImageUrl(URL.createObjectURL(event.target.files[0]));
                 setUploadedImage(event.target.files[0]);
               }}
             />
+            <br />
             <img
               src={
                 !uploadedImageUrl.trim()
@@ -191,15 +153,15 @@ const CreateReportForm = () => {
                   : uploadedImageUrl
               }
               style={{ width: "500px" }}
-              alt="upload"
+              alt=""
+              className={classes.image}
             />
+            <br />
             <Button
               type="submit"
-              color="inherit"
-              style={{
-                color: "white",
-                backgroundColor: "#00e600",
-              }}
+              variant="contained"
+              color="primary"
+              className={classes.buttonCenter}
             >
               Submit
             </Button>
