@@ -48,7 +48,7 @@ const App = () => {
             <Route exact path="/reports" component={AllReports} />
             <Route exact path="/newReport" component={CreateReportForm} />
             <Route exact path="/map" component={Map} />
-            <Route exact path="/fileUpload" component={FileUpload} />
+            <Route exact path="/pet/:id" component={FileUpload} />
             <Route
               exact
               path="*"

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { gettingAllReports } from "../store";
 import useSupercluster from "use-supercluster";
 import ReactMapGL, { Marker, FlyToInterpolator, Popup } from "react-map-gl";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
 import { initialize } from "passport";
 let accessToken =
@@ -203,24 +203,26 @@ const Map = () => {
         })}
         {multSelectedObj.names ? (
           <Popup
-            latitude={multSelectedObj.lat}
-            longitude={multSelectedObj.long}
-            onClose={() => {
-              setViewport({
-                width: 750,
-                height: 750,
-                zoom: 8,
-                latitude: multSelectedObj.lat,
-                longitude: multSelectedObj.long,
-              });
-              setMultObjs({});
-            }}
+            latitude={Number(multSelectedObj.lat)}
+            longitude={Number(multSelectedObj.long)}
+            // closeOnClick={true}
+            // onClose={() => {
+            //   setViewport({
+            //     width: 750,
+            //     height: 750,
+            //     zoom: 8,
+            //     latitude: multSelectedObj.lat,
+            //     longitude: multSelectedObj.long,
+            //   });
+            //   setMultObjs({});
+            // }}
           >
             {multSelectedObj.names.map((value, idx) => {
               let lastIdx = value.indexOf(" ");
               let name = value.slice(0, lastIdx);
               let id = value.slice(lastIdx + 1);
               return (
+                // <div onClick={() => <Redirect to={`/pet/${id}`} />}>
                 <Link to={`/pet/${id}`}>
                   <h3 key={idx}>{name}</h3>
                 </Link>
@@ -232,21 +234,27 @@ const Map = () => {
           <Popup
             latitude={Number(selectedObj.lat)}
             longitude={Number(selectedObj.long)}
-            onClose={() => {
-              setSelectObj({});
-              setViewport({
-                ...viewport,
-                zoom: 8,
-              });
-            }}
+            // onClose={() => {
+            //   setSelectObj({});
+            //   setViewport({
+            //     ...viewport,
+            //     zoom: 8,
+            //   });
+            // }}
           >
-            <Link to="/fileUpload">
+            <Link to={`/pet/${selectedObj.id}`}>
               <h2>{selectedObj.name}</h2>
             </Link>
           </Popup>
         ) : null}
       </ReactMapGL>
-      {selectedObj.id ? <h1>just a small town girl</h1> : <h2>nope</h2>}
+      {selectedObj.id ? (
+        <Link to="/fileUpload">
+          <h2>{selectedObj.name}</h2>
+        </Link>
+      ) : (
+        <h2>nope</h2>
+      )}
     </div>
   );
 };

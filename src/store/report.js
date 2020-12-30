@@ -2,6 +2,7 @@ import axios from "axios";
 
 //Action Types
 const CREATE_REPORT = "CREATE_REPORT";
+const GET_REPORT = "GET_REPORT";
 // const GET_REPORTS = "GET_REPORTS";
 
 //Initial State
@@ -10,6 +11,7 @@ const defaultReport = {};
 //Action Creators
 
 const createReport = (report) => ({ type: CREATE_REPORT, report });
+const getReport = (singleReport) => ({ type: GET_REPORT, singleReport });
 // const getAllReports = (report) => ({ type: GET_REPORTS, report });
 
 //THUNK CREATOR
@@ -28,30 +30,32 @@ const createReport = (report) => ({ type: CREATE_REPORT, report });
 //   }
 // };
 
-export const reportCreation = (
-  userId,
-  petName,
-  lastPlaceSeen,
-  contactEmail,
-  zipCode
-) => async (dispatch) => {
+export const gettingSingleReport = (petId) => async (dispatch) => {
+  try {
+    const response = await axios({
+      method: "GET",
+      baseURL: `http://localhost:4000/report/pet/${petId}`,
+    });
+    let { data } = response;
+    dispatch(getReport(data));
+  } catch (error) {
+    console.log(error);
+    dispatch(getReport({ error: error }));
+  }
+};
+
+export const reportCreation = (formData) => async (dispatch) => {
   try {
     let response = await axios({
       method: "POST",
-      data: {
-        userId,
-        petName,
-        lastPlaceSeen,
-        contactEmail,
-        zipCode,
-      },
+      data: formData,
       withCredentials: true,
-      url: "http://localhost:4000/report/",
+      url: "http://localhost:4000/report/file",
     });
     let { data } = response;
     dispatch(createReport(data));
   } catch (error) {
-    return dispatch(createReport({ error: error }));
+    dispatch(createReport({ error: error }));
   }
 };
 
@@ -61,6 +65,8 @@ let reportReducer = (state = defaultReport, action) => {
   switch (action.type) {
     case CREATE_REPORT:
       return action.report;
+    case GET_REPORT:
+      return action.singleReport;
     default:
       return state;
   }

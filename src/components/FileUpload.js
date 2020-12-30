@@ -3,36 +3,28 @@ import { useSelector, useDispatch } from "react-redux";
 import { reportCreation, gettingAllReports } from "../store";
 import { Button, Container } from "@material-ui/core";
 import { Link, Redirect } from "react-router-dom";
+import { gettingSingleReport } from "../store";
 import axios from "axios";
 
-const FileUpload = () => {
-  const [imageObj, setImageObj] = useState({});
-  const [petObj, setPetObj] = useState({});
-  const getReport = async () => {
-    const response = await axios({
-      method: "GET",
-      baseURL: "http://localhost:4000/report/pet/5fe8f4c34d70d512236a03b9",
-    });
+const FileUpload = ({ match }) => {
+  const allState = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const { report } = allState;
+  const { id } = match.params;
 
-    // console.log(response);
-    // console.log("data: ", response.data);
-    setImageObj(response.data.file);
-    setPetObj(response.data.query);
-  };
   useEffect(() => {
-    getReport();
+    console.log(id);
+    dispatch(gettingSingleReport(id));
+    // setPetObj(report);
   }, []);
 
   return (
     <div>
       <h1>hi</h1>
-      <button onClick={() => console.log(petObj)}>test</button>
-      {imageObj.filename ? (
+      <button onClick={() => console.log(report.query)}>test</button>
+      {report.file ? (
         <img
-          src={
-            "http://localhost:4000/report/pet/5fe8f4c34d70d512236a03b9/" +
-            imageObj.filename
-          }
+          src={`http://localhost:4000/report/pet/${id}/${report.file.filename}`}
           alt="recent"
           style={{ width: "500px" }}
         />
