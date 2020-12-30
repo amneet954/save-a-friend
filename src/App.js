@@ -7,21 +7,11 @@ import {
   AllReports,
   Home,
   Map,
-  FileUpload,
+  SinglePet,
 } from "./components";
 import { Typography, Container } from "@material-ui/core";
 import { makeStyles, fade } from "@material-ui/core/styles";
-const useStyles = makeStyles((theme) => ({
-  footer: {
-    padding: theme.spacing(3, 2),
-    // marginTop: "auto",
-    marginTop: "8%",
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[200]
-        : theme.palette.grey[800],
-  },
-}));
+import useStyles from "./components/style";
 
 const Copyright = () => {
   return (
@@ -48,7 +38,7 @@ const App = () => {
             <Route exact path="/reports" component={AllReports} />
             <Route exact path="/newReport" component={CreateReportForm} />
             <Route exact path="/map" component={Map} />
-            <Route exact path="/pet/:id" component={FileUpload} />
+            <Route exact path="/pet/:id" component={SinglePet} />
             <Route
               exact
               path="*"

@@ -80,6 +80,18 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     display: "block",
   },
+  footer: {
+    padding: theme.spacing(3, 2),
+    // marginTop: "auto",
+    marginTop: "8%",
+    backgroundColor:
+      theme.palette.type === "light"
+        ? theme.palette.grey[200]
+        : theme.palette.grey[800],
+  },
+  loginButton: {
+    textAlign: "center",
+  },
 }));
 
 export default useStyles;
