@@ -1,44 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { reportCreation, gettingAllReports } from "../store";
+import { reportCreation } from "../store";
 import { Button, Container } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 import { Link, Redirect } from "react-router-dom";
-import axios from "axios";
+import useStyles from "./style/index.js";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-  },
-  formCenter: {
-    margin: "auto",
-    width: "800px",
-  },
-  textFieldCenter: {
-    width: "50%;",
-    margin: "auto",
-    display: "block",
-  },
-  buttonCenter: {
-    margin: "auto",
-    display: "block",
-  },
-  formControl: {
-    margin: "auto",
-    width: "50%;",
-    display: "block",
-  },
-  title: { textAlign: "center" },
-  image: {
-    width: "500px",
-    margin: "auto",
-    display: "block",
-  },
-}));
 const CreateReportForm = () => {
   let [petName, setPetName] = useState("");
   let [lastPlaceSeen, setLastPlace] = useState("");
