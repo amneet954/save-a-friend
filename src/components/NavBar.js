@@ -100,10 +100,6 @@ const NavBar = () => {
       link: "/aboutUs",
       title: "About Us",
     },
-    {
-      link: "/fileUpload",
-      title: "Upload Test",
-    },
   ];
 
   return (
