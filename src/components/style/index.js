@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formCenter: {
     margin: "auto",
-    width: "800px",
+    width: "500px",
   },
   textFieldCenter: {
     width: "50%;",
@@ -71,8 +71,8 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: "auto",
-    width: "50%;",
-    display: "block",
+    width: "25%",
+    display: "inline-block;",
   },
   title: { textAlign: "center" },
   image: {
@@ -82,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
   },
   footer: {
     padding: theme.spacing(3, 2),
-    // marginTop: "auto",
     marginTop: "8%",
     backgroundColor:
       theme.palette.type === "light"
@@ -91,6 +90,10 @@ const useStyles = makeStyles((theme) => ({
   },
   loginButton: {
     textAlign: "center",
+  },
+  loginFields: {
+    display: "inline-block",
+    marginLeft: "30px",
   },
 }));
 
