@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { reportCreation } from "../store";
 import { Button, Container } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import useStyles from "./style/index.js";
 
 const CreateReportForm = () => {
@@ -90,7 +90,7 @@ const CreateReportForm = () => {
     },
     {
       value: zipCode,
-      label: "ZipCode",
+      label: "Zip Code",
       eventName: "zipCode",
       type: "text",
       function: setZipCode,
@@ -103,7 +103,8 @@ const CreateReportForm = () => {
       function: setContactEmail,
     },
   ];
-
+  console.log("ALL STATE: ", allState);
+  console.log("USERNAME: ", user);
   if (redirect === true) {
     return <Redirect to="map" />;
   } else if (username) {

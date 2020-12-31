@@ -1,7 +1,7 @@
-import { connect } from "react-redux";
-import { Button, Container } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import useStyles from "./style";
+
 const Home = () => {
   const classes = useStyles();
   const user = useSelector((state) => state.user);
