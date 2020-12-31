@@ -82,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
   },
   footer: {
     padding: theme.spacing(3, 2),
-    // marginTop: "auto",
     marginTop: "8%",
     backgroundColor:
       theme.palette.type === "light"

@@ -124,7 +124,7 @@ const CreateReportForm = () => {
               return (
                 <div key={idx}>
                   <TextField
-                    name={field.name}
+                    name={field.eventName}
                     type={field.type}
                     label={field.label}
                     value={field.value}
