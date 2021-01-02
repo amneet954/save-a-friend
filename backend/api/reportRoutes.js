@@ -9,6 +9,7 @@ const GridFsStorage = require("multer-gridfs-storage");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 let url = `mongodb://localhost:27017/save-a-friend`;
+
 const storage = new GridFsStorage({
   url,
   file: (req, file) => {
@@ -44,6 +45,7 @@ connect.once("open", () => {
   });
 });
 
+//GETTING INDIVIDUAL PET
 router.get("/pet/:petId", async (req, res) => {
   try {
     const { petId } = req.params;
@@ -98,84 +100,93 @@ router.get("/pet/:petId/:id", async (req, res) => {
         });
       }
     });
-
-    // imageRouter.route("/image/:filename").get((req, res, next) => {
-    //   gfs.find({ filename: req.params.filename }).toArray((err, files) => {
-    //     if (!files[0] || files.length === 0) {
-    //       return res.status(200).json({
-    //         success: false,
-    //         message: "No files available",
-    //       });
-    //     }
-
-    //     if (
-    //       files[0].contentType === "image/jpeg" ||
-    //       files[0].contentType === "image/png" ||
-    //       files[0].contentType === "image/svg+xml"
-    //     ) {
-    //       // render image to browser
-    //       gfs.openDownloadStreamByName(req.params.filename).pipe(res);
-    //     } else {
-    //       res.status(404).json({
-    //         err: "Not an image",
-    //       });
-    //     }
-    //   });
-    // });
   } catch (error) {
     console.log(error);
   }
 });
-router.get("/:id", async (req, res, next) => {
+
+//GET ALL REPORTS ROUTE
+router.get("/:userId", async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const query = await Report.find({ userId: id });
+    const { userId } = req.params;
+    const query = await Report.find({ userId });
     res.send(query);
   } catch (error) {
     console.log(error);
   }
+  // try {
+  //   const { userId } = req.params;
+  //   const query = await Report.find({ userId });
+
+  //   gfs.find().toArray((err, files) => {
+  //     if (!files || files.length === 0) {
+  //       return res.status(200).json({
+  //         success: false,
+  //         message: "No files available",
+  //       });
+  //     }
+
+  //     files.map((file) => {
+  //       if (
+  //         file.contentType === "image/jpeg" ||
+  //         file.contentType === "image/png" ||
+  //         file.contentType === "image/svg"
+  //       ) {
+  //         file.isImage = true;
+  //       } else {
+  //         file.isImage = false;
+  //       }
+  //     });
+
+  //     let arr = [files, query];
+  //     console.log(arr);
+  //     // res.status(200).json({
+  //     //   success: true,
+  //     //   files,
+  //     //   query,
+  //     // });
+
+  //     res.send(arr);
+  //   });
+  //   // res.send(query);
+  // } catch (error) {
+  //   console.log(error);
+  // }
 });
 
-router.post("/", async (req, res, next) => {
-  try {
-    // let petImageId = req.file.id;
-    // let petImageName = req.file.filename;
+// router.post("/", async (req, res, next) => {
+//   try {
+//     let { userId, petName, lastPlaceSeen, contactEmail, zipCode } = req.body;
+//     let address = lastPlaceSeen.split(" ").join("%20");
 
-    let { userId, petName, lastPlaceSeen, contactEmail, zipCode } = req.body;
-    let address = lastPlaceSeen.split(" ").join("%20");
-    // let dateObj = new Date();
-    // let month = dateObj.getUTCMonth() + 1; //months from 1-12
-    // let day = dateObj.getUTCDate();
-    // let year = dateObj.getUTCFullYear();
-    // let date = month + "/" + day + "/" + year;
-    const coordinates = await axios({
-      method: "GET",
-      url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?country=US&access_token=${accessToken}`,
-    });
+//     const coordinates = await axios({
+//       method: "GET",
+//       url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?country=US&access_token=${accessToken}`,
+//     });
 
-    const { data } = coordinates;
-    lastPlaceSeen = data.features[0].place_name;
-    let values = data.features[0].geometry.coordinates;
-    const longitude = values[0];
-    const latitude = values[1];
-    let geo = { longitude, latitude };
+//     const { data } = coordinates;
+//     lastPlaceSeen = data.features[0].place_name;
+//     let values = data.features[0].geometry.coordinates;
+//     const longitude = values[0];
+//     const latitude = values[1];
+//     let geo = { longitude, latitude };
 
-    const newReport = await new Report({
-      userId,
-      petName,
-      lastPlaceSeen,
-      contactEmail,
-      zipCode,
-      geo,
-      // petImageId,
-      // petImageName,
-    });
-    await newReport.save();
-    res.send(newReport);
-  } catch (error) {
-    console.log(error);
-  }
-});
+//     const newReport = await new Report({
+//       userId,
+//       petName,
+//       lastPlaceSeen,
+//       contactEmail,
+//       zipCode,
+//       geo,
+//       // petImageId,
+//       // petImageName,
+//     });
+//     await newReport.save();
+//     res.send(newReport);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 //http://localhost:4000/report/file
 router.route("/file").post(upload.single("file"), async (req, res, next) => {

@@ -8,7 +8,9 @@ const AllReports = () => {
   const state = useSelector((state) => state);
   const { user, allReportsReducer } = state;
   const dispatch = useDispatch();
-  useEffect(() => dispatch(gettingAllReports(user._id)), []);
+  useEffect(() => {
+    dispatch(gettingAllReports(user._id));
+  }, []);
 
   if (!user._id) {
     return (
@@ -21,7 +23,6 @@ const AllReports = () => {
     return (
       <div>
         <h1>Hi from All Reports</h1>
-
         {allReportsReducer.map((pet, idx) => {
           return (
             //CHANGE API BACKEND CALL TO INCLUDE PICTURE?
@@ -29,6 +30,11 @@ const AllReports = () => {
               <h1>Name: {pet.petName}</h1>
               <h2> Last Seen: {pet.lastPlaceSeen}</h2>
               <h2>Last Time of Update: {pet.lastTimeOfUpdate} </h2>
+              <img
+                src={`http://localhost:4000/report/pet/${pet._id}/${pet.petImageName}`}
+                alt="recent"
+                style={{ width: "500px" }}
+              />
             </div>
           );
         })}
