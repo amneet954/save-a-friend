@@ -6,8 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 const AllReports = () => {
   const state = useSelector((state) => state);
-  const { user } = state;
-  const { report } = state;
+  const { user, allReportsReducer } = state;
   const dispatch = useDispatch();
   useEffect(() => dispatch(gettingAllReports(user._id)), []);
 
@@ -18,14 +17,19 @@ const AllReports = () => {
       </div>
     );
   } else {
+    console.log(allReportsReducer);
     return (
       <div>
         <h1>Hi from All Reports</h1>
-        {Object.entries(report).map(([key, value]) => {
+
+        {allReportsReducer.map((pet, idx) => {
           return (
-            <li key={key.id}>
-              <Link to={value}>{value.petName}'s status</Link>
-            </li>
+            //CHANGE API BACKEND CALL TO INCLUDE PICTURE?
+            <div key={idx} style={{ outlineStyle: "solid" }}>
+              <h1>Name: {pet.petName}</h1>
+              <h2> Last Seen: {pet.lastPlaceSeen}</h2>
+              <h2>Last Time of Update: {pet.lastTimeOfUpdate} </h2>
+            </div>
           );
         })}
       </div>
