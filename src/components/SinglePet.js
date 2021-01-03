@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { reportCreation, gettingAllReports } from "../store";
-import { Button, Container } from "@material-ui/core";
-import { Link, Redirect } from "react-router-dom";
 import { gettingSingleReport } from "../store";
-import axios from "axios";
 
 const SinglePet = ({ match }) => {
   const allState = useSelector((state) => state);
@@ -13,9 +9,8 @@ const SinglePet = ({ match }) => {
   const { id } = match.params;
 
   useEffect(() => {
-    console.log(id);
     dispatch(gettingSingleReport(id));
-    // setPetObj(report);
+    // eslint-disable-next-line
   }, []);
 
   return (

@@ -15,6 +15,23 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     paddingRight: "5%",
   },
+  accountButton: {
+    marginRight: "1%",
+    color: "white",
+  },
+  zoomOutButton: {
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "2%",
+    marginBottom: "2%",
+    margin: "auto",
+  },
+  reactMapPlacement: {
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
   linkDecoration: { textDecoration: "none", color: "black" },
   search: {
     position: "relative",
@@ -93,6 +110,12 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
   loginFields: {
+    // display: "inline-block",
+    // marginLeft: "30px",
+    marginRight: "auto",
+    marginTop: "2%",
+    marginBottom: "2%",
+    margin: "auto",
     display: "inline-block",
     marginLeft: "30px",
   },

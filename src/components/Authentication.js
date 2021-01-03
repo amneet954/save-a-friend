@@ -97,6 +97,17 @@ const Authentication = () => {
             ? "I already have an account"
             : "Need an Account?"}
         </button>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={classes.zoomOutButton}
+          onClick={chooseLoginorRegister}
+        >
+          {loginOrRegister === "register"
+            ? "I already have an account"
+            : "Need an Account?"}
+        </Button>
         <form
           onSubmit={(event) => handleSubmit(event)}
           className={classes.formCenter}

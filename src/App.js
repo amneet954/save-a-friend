@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Link } from "react-router-dom";
 import {
   CreateReportForm,
   NavBar,
@@ -10,7 +9,7 @@ import {
   SinglePet,
 } from "./components";
 import { Typography, Container } from "@material-ui/core";
-import { makeStyles, fade } from "@material-ui/core/styles";
+
 import useStyles from "./components/style";
 
 const Copyright = () => {
@@ -25,6 +24,9 @@ const Copyright = () => {
     </Typography>
   );
 };
+
+//Make the Switch more modular
+
 const App = () => {
   const classes = useStyles();
   return (
