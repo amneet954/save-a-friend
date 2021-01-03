@@ -92,11 +92,6 @@ const Authentication = () => {
   } else {
     return (
       <div>
-        <button onClick={chooseLoginorRegister}>
-          {loginOrRegister === "register"
-            ? "I already have an account"
-            : "Need an Account?"}
-        </button>
         <Button
           type="submit"
           variant="contained"

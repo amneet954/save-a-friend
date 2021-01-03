@@ -7,6 +7,7 @@ import {
   Home,
   Map,
   SinglePet,
+  ErrorPage,
 } from "./components";
 import { Typography, Container } from "@material-ui/core";
 
@@ -27,6 +28,16 @@ const Copyright = () => {
 
 //Make the Switch more modular
 
+let routes = [
+  { path: "/", component: Home },
+  { path: "/login", component: Authentication },
+  { path: "/reports", component: AllReports },
+  { path: "/newReport", component: CreateReportForm },
+  { path: "/map", component: Map },
+  { path: "/pet/:id", component: SinglePet },
+  { path: "*", component: ErrorPage },
+];
+
 const App = () => {
   const classes = useStyles();
   return (
@@ -35,7 +46,10 @@ const App = () => {
         <NavBar />
         <main>
           <Switch>
-            <Route exact path="/" component={Home} />
+            {routes.map((route) => (
+              <Route exact path={route.path} component={route.component} />
+            ))}
+            {/* <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Authentication} />
             <Route exact path="/reports" component={AllReports} />
             <Route exact path="/newReport" component={CreateReportForm} />
@@ -49,7 +63,7 @@ const App = () => {
                   PAGE DOESN'T EXIST. PLEASE START AT THE 'WELCOME' LINK!
                 </h1>
               )}
-            />
+            /> */}
           </Switch>
         </main>
         <footer className={classes.footer}>
