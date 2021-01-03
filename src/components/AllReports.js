@@ -7,7 +7,7 @@ import useStyles from "./style";
 const AllReports = () => {
   const classes = useStyles();
   const state = useSelector((state) => state);
-  const { user, allReportsReducer } = state;
+  const { user, allReports } = state;
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(gettingAllReports(user._id));
@@ -27,7 +27,7 @@ const AllReports = () => {
       <div className={classes.allReportsGridPadding}>
         <h1 className={classes.title}>Hi from All Reports</h1>
         <div className={classes.allReportsGrid}>
-          {allReportsReducer.map((pet, idx) => {
+          {allReports.map((pet, idx) => {
             return (
               <div key={idx}>
                 <div className={classes.allReportsCell}>

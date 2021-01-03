@@ -1,9 +1,15 @@
 import axios from "axios";
+
+//Default State
+const defaultReport = [];
+
+//Action Type
 const GET_REPORTS = "GET_REPORTS";
 
-const defaultReport = [];
+//Action Creator
 const getAllReports = (report) => ({ type: GET_REPORTS, report });
 
+//Thunk
 export const gettingAllReports = (id) => async (dispatch) => {
   try {
     let response = await axios({
@@ -18,7 +24,8 @@ export const gettingAllReports = (id) => async (dispatch) => {
   }
 };
 
-let allReportsReducer = (state = defaultReport, action) => {
+//Reducer
+let allReports = (state = defaultReport, action) => {
   switch (action.type) {
     case GET_REPORTS:
       return [...action.report];
@@ -27,4 +34,4 @@ let allReportsReducer = (state = defaultReport, action) => {
   }
 };
 
-export default allReportsReducer;
+export default allReports;

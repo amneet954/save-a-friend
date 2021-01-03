@@ -5,19 +5,22 @@ import useSupercluster from "use-supercluster";
 import ReactMapGL, { Marker, FlyToInterpolator, Popup } from "react-map-gl";
 import { Link, Redirect } from "react-router-dom";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
+import { Button } from "@material-ui/core";
+import useStyles from "./style";
 let accessToken =
   "pk.eyJ1IjoiYW1uZWV0OTU0IiwiYSI6ImNqdjJpd215dzB5azIzeXFvZDMxbmk2ZDYifQ.FIIav70z0itM7EsJHAe_6A";
 
 const Map = () => {
+  const classes = useStyles();
   let [zipCodes, setZipCodes] = useState({});
   const state = useSelector((state) => state);
-  let { user, allReportsReducer } = state;
+  let { user, allReports } = state;
 
   const initalDispatch = async () => {
     await dispatch(gettingAllReports(user._id));
     let obj = {};
-    for (let i = 0; i < allReportsReducer.length; i++) {
-      let current = allReportsReducer[i];
+    for (let i = 0; i < allReports.length; i++) {
+      let current = allReports[i];
       let { geo, petName, _id } = current;
       let { longitude, latitude } = geo;
       longitude = Number(longitude.toFixed(6));
@@ -48,7 +51,7 @@ const Map = () => {
 
   const mapRef = useRef();
 
-  const points = allReportsReducer.map((report) => ({
+  const points = allReports.map((report) => ({
     type: "Feature",
     properties: {
       cluster: false,
@@ -79,8 +82,12 @@ const Map = () => {
   const [multSelectedObj, setMultObjs] = useState({});
 
   return (
-    <div>
-      <button
+    <div className={classes.allReportsGridPadding}>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        className={classes.zoomOutButton}
         onClick={() => {
           setSelectObj({});
           setMultObjs({});
@@ -94,7 +101,7 @@ const Map = () => {
         }}
       >
         Zoom Out
-      </button>
+      </Button>
       <ReactMapGL
         {...viewport}
         minZoom={5}
@@ -103,6 +110,8 @@ const Map = () => {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         onViewportChange={(viewport) => handleViewportChange(viewport)}
         ref={mapRef}
+        attributionControl={false}
+        className={classes.reactMapPlacement}
       >
         {clusters.map((cluster) => {
           let [longitude, latitude] = cluster.geometry.coordinates;
@@ -153,27 +162,10 @@ const Map = () => {
                         long: Number(long),
                         lat: Number(lat),
                       };
-
-                      // values.map((value) => {
-                      //   let lastIdx = value.indexOf(" ");
-                      //   let name = value.slice(0, lastIdx);
-                      //   let id = value.slice(lastIdx + 1);
-                      //   arrObj.push({
-                      //     id,
-                      //     name,
-                      //     long: Number(long),
-                      //     lat: Number(lat),
-                      //   });
-                      // });
                       setMultObjs(arrObj);
                     }
                   }}
                 >
-                  {/* {zipCodes[`${longitude},${latitude}`] && viewport.zoom > 15
-                      ? zipCodes[`${longitude},${latitude}`].map((value, idx) => {
-                          return <h1 key={idx}>{value}</h1>;
-                        })
-                      : null} */}
                   <Brightness1Icon fontSize="small" />
                   {pointCount}
                 </div>
@@ -222,17 +214,6 @@ const Map = () => {
             latitude={Number(multSelectedObj.lat)}
             longitude={Number(multSelectedObj.long)}
             closeButton={false}
-            // closeOnClick={true}
-            // onClose={() => {
-            //   setViewport({
-            //     width: 750,
-            //     height: 750,
-            //     zoom: 8,
-            //     latitude: multSelectedObj.lat,
-            //     longitude: multSelectedObj.long,
-            //   });
-            //   setMultObjs({});
-            // }}
           >
             <div>
               {multSelectedObj.names.map((value, idx) => {
@@ -244,7 +225,7 @@ const Map = () => {
                     style={{ backgroundColor: "white" }}
                     onClick={() => <Redirect to={`/pet/${id}`} />}
                   >
-                    <Link to={`/pet/${id}`}>
+                    <Link to={`/pet/${id}`} className={classes.linkDecoration}>
                       <h3 key={idx}>{name}</h3>
                     </Link>
                   </div>
@@ -259,15 +240,11 @@ const Map = () => {
             latitude={Number(selectedObj.lat)}
             longitude={Number(selectedObj.long)}
             closeButton={false}
-            // onClose={() => {
-            //   setSelectObj({});
-            //   setViewport({
-            //     ...viewport,
-            //     zoom: 8,
-            //   });
-            // }}
           >
-            <Link to={`/pet/${selectedObj.id}`}>
+            <Link
+              to={`/pet/${selectedObj.id}`}
+              className={classes.linkDecoration}
+            >
               <h2>{selectedObj.name}</h2>
             </Link>
           </Popup>

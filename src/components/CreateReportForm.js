@@ -32,46 +32,13 @@ const CreateReportForm = () => {
     formData.append("contactEmail", contactEmail);
     formData.append("zipCode", zipCode);
     await dispatch(reportCreation(formData));
-    // alert("Report Sucessfully Created");
-    // // dispatch(gettingAllReports(userId));
-    // setRedirect(true);
   };
-  //report.file.filename
 
   useEffect(() => {
     if (redirect === true) {
       setRedirect(false);
     }
   }, []);
-
-  // const uploadImage = async () => {
-  //   try {
-  //     if (!uploadedImage.name) alert("Image Upload Failed");
-
-  //     let formData = new FormData();
-  //     formData.append("file", uploadedImage);
-  //     const userId = _id;
-  //     formData.append("userId", userId);
-  //     formData.append("petName", petName);
-  //     formData.append("lastPlaceSeen", lastPlaceSeen);
-  //     formData.append("contactEmail", contactEmail);
-  //     formData.append("zipCode", zipCode);
-  //     // console.log("Form Data: ", formData.get("file"));
-  //     // console.log("UserID:  ", formData.get("userId"));
-  //     axios
-  //       .post("http://localhost:4000/report/file", formData)
-  //       .then((response) => {
-  //         console.log("RESPONSE: ", response);
-  //         response.data.success
-  //           ? alert("File successfully uploaded")
-  //           : alert("File already exists");
-  //         // this.fetchRecent();
-  //       })
-  //       .catch((err) => alert("Error: " + err));
-  //   } catch (error) {
-  //     console.log("Error: ", error);
-  //   }
-  // };
 
   const fields = [
     {
@@ -108,13 +75,11 @@ const CreateReportForm = () => {
   if (redirect === true) {
     return <Redirect to="map" />;
   } else if (username) {
-    // console.log(allState);
     return (
       <div>
         <h1 className={classes.title}>Hi {username}, let's save your pet!</h1>
         <Container maxWidth="sm">
           <form
-            // className={classes.formCenter}
             onSubmit={(event) => {
               event.preventDefault();
               createReport();

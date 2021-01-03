@@ -10,6 +10,7 @@ import {
 import SearchIcon from "@material-ui/icons/Search";
 import { useSelector, useDispatch } from "react-redux";
 import useStyles from "./style/index.js";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 const NavBar = () => {
   const classes = useStyles();
@@ -71,6 +72,11 @@ const NavBar = () => {
                 />
               </div>
             </div>
+          ) : null}
+          {state.user._id ? (
+            <Link to="/map" className={classes.accountButton}>
+              <AccountCircleIcon />
+            </Link>
           ) : null}
           {state.user._id ? (
             <Link to="/" className={classes.navBarLink} onClick={logOut}>

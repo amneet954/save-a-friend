@@ -3,7 +3,6 @@ import axios from "axios";
 //Action Types
 const CREATE_REPORT = "CREATE_REPORT";
 const GET_REPORT = "GET_REPORT";
-// const GET_REPORTS = "GET_REPORTS";
 
 //Initial State
 const defaultReport = {};
@@ -12,23 +11,8 @@ const defaultReport = {};
 
 const createReport = (report) => ({ type: CREATE_REPORT, report });
 const getReport = (singleReport) => ({ type: GET_REPORT, singleReport });
-// const getAllReports = (report) => ({ type: GET_REPORTS, report });
 
 //THUNK CREATOR
-
-// export const gettingAllReports = (id) => async (dispatch) => {
-//   try {
-//     let response = await axios({
-//       method: "GET",
-//       withCredentials: true,
-//       url: `http://localhost:4000/report/${id}`,
-//     });
-//     let { data } = response;
-//     dispatch(getAllReports(data));
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 export const gettingSingleReport = (petId) => async (dispatch) => {
   try {
