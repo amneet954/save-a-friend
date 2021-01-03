@@ -1,43 +1,51 @@
 import React, { useEffect } from "react";
 import { gettingAllReports } from "../store";
-import { Button, Container } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import useStyles from "./style";
 
 const AllReports = () => {
+  const classes = useStyles();
   const state = useSelector((state) => state);
   const { user, allReportsReducer } = state;
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(gettingAllReports(user._id));
+    // eslint-disable-next-line
   }, []);
 
   if (!user._id) {
     return (
-      <div>
-        <h1>Please log in to view your pet case reports</h1>
+      <div className={classes.allReportsGridPadding}>
+        <h1 className={classes.title}>
+          Please log in to view your pet case reports
+        </h1>
       </div>
     );
   } else {
-    console.log(allReportsReducer);
     return (
-      <div>
-        <h1>Hi from All Reports</h1>
-        {allReportsReducer.map((pet, idx) => {
-          return (
-            //CHANGE API BACKEND CALL TO INCLUDE PICTURE?
-            <div key={idx} style={{ outlineStyle: "solid" }}>
-              <h1>Name: {pet.petName}</h1>
-              <h2> Last Seen: {pet.lastPlaceSeen}</h2>
-              <h2>Last Time of Update: {pet.lastTimeOfUpdate} </h2>
-              <img
-                src={`http://localhost:4000/report/pet/${pet._id}/${pet.petImageName}`}
-                alt="recent"
-                style={{ width: "500px" }}
-              />
-            </div>
-          );
-        })}
+      <div className={classes.allReportsGridPadding}>
+        <h1 className={classes.title}>Hi from All Reports</h1>
+        <div className={classes.allReportsGrid}>
+          {allReportsReducer.map((pet, idx) => {
+            return (
+              <div key={idx}>
+                <div className={classes.allReportsCell}>
+                  <a href={`http://localhost:3000/pet/${pet._id}`}>
+                    <img
+                      src={`http://localhost:4000/report/pet/${pet._id}/${pet.petImageName}`}
+                      alt="recent"
+                      className={classes.allReportsIndividualImage}
+                    />
+                  </a>
+                </div>
+                <Link to={`/pet/${pet._id}`} className={classes.linkDecoration}>
+                  <h4 className={classes.title}>{pet.petName}</h4>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

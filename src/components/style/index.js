@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     paddingRight: "5%",
   },
+  linkDecoration: { textDecoration: "none", color: "black" },
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
@@ -94,6 +95,27 @@ const useStyles = makeStyles((theme) => ({
   loginFields: {
     display: "inline-block",
     marginLeft: "30px",
+  },
+  allReportsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    gridGap: "10%",
+    gridAutoRows: "250px",
+  },
+  allReportsCell: {
+    outlineStyle: "solid",
+    textDecoration: "none",
+  },
+  allReportsIndividualImage: {
+    maxWidth: "460px",
+    maxHeight: "190px",
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  allReportsGridPadding: {
+    paddingLeft: "20%",
+    paddingRight: "20%",
   },
 }));
 

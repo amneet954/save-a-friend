@@ -45,6 +45,17 @@ connect.once("open", () => {
   });
 });
 
+//GET ALL REPORTS ROUTE
+router.get("/:userId", async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const query = await Report.find({ userId });
+    res.send(query);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 //GETTING INDIVIDUAL PET
 router.get("/pet/:petId", async (req, res) => {
   try {
@@ -104,89 +115,6 @@ router.get("/pet/:petId/:id", async (req, res) => {
     console.log(error);
   }
 });
-
-//GET ALL REPORTS ROUTE
-router.get("/:userId", async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-    const query = await Report.find({ userId });
-    res.send(query);
-  } catch (error) {
-    console.log(error);
-  }
-  // try {
-  //   const { userId } = req.params;
-  //   const query = await Report.find({ userId });
-
-  //   gfs.find().toArray((err, files) => {
-  //     if (!files || files.length === 0) {
-  //       return res.status(200).json({
-  //         success: false,
-  //         message: "No files available",
-  //       });
-  //     }
-
-  //     files.map((file) => {
-  //       if (
-  //         file.contentType === "image/jpeg" ||
-  //         file.contentType === "image/png" ||
-  //         file.contentType === "image/svg"
-  //       ) {
-  //         file.isImage = true;
-  //       } else {
-  //         file.isImage = false;
-  //       }
-  //     });
-
-  //     let arr = [files, query];
-  //     console.log(arr);
-  //     // res.status(200).json({
-  //     //   success: true,
-  //     //   files,
-  //     //   query,
-  //     // });
-
-  //     res.send(arr);
-  //   });
-  //   // res.send(query);
-  // } catch (error) {
-  //   console.log(error);
-  // }
-});
-
-// router.post("/", async (req, res, next) => {
-//   try {
-//     let { userId, petName, lastPlaceSeen, contactEmail, zipCode } = req.body;
-//     let address = lastPlaceSeen.split(" ").join("%20");
-
-//     const coordinates = await axios({
-//       method: "GET",
-//       url: `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?country=US&access_token=${accessToken}`,
-//     });
-
-//     const { data } = coordinates;
-//     lastPlaceSeen = data.features[0].place_name;
-//     let values = data.features[0].geometry.coordinates;
-//     const longitude = values[0];
-//     const latitude = values[1];
-//     let geo = { longitude, latitude };
-
-//     const newReport = await new Report({
-//       userId,
-//       petName,
-//       lastPlaceSeen,
-//       contactEmail,
-//       zipCode,
-//       geo,
-//       // petImageId,
-//       // petImageName,
-//     });
-//     await newReport.save();
-//     res.send(newReport);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
 
 //http://localhost:4000/report/file
 router.route("/file").post(upload.single("file"), async (req, res, next) => {
