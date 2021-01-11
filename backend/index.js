@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const authRoutes = require("./api/authRoutes");
 const reportRoutes = require("./api/reportRoutes");
+const commentRoutes = require("./api/commentRoutes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -11,9 +12,6 @@ const PORT = 4000;
 const session = require("express-session");
 
 const path = require("path");
-const multer = require("multer");
-const GridFsStorage = require("multer-gridfs-storage");
-const crypto = require("crypto");
 const logger = require("morgan");
 
 //Mongoose Connection
@@ -47,8 +45,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./passport")(passport);
 app.use("/auth", authRoutes);
-
 app.use("/report", reportRoutes);
+app.use("/comment", commentRoutes);
 app.use("/api", require("./api")); //error handling
 
 app.listen(PORT, () => {

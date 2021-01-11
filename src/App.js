@@ -10,7 +10,6 @@ import {
   ErrorPage,
 } from "./components";
 import { Typography, Container } from "@material-ui/core";
-
 import useStyles from "./components/style";
 
 const Copyright = () => {
@@ -25,8 +24,6 @@ const Copyright = () => {
     </Typography>
   );
 };
-
-//Make the Switch more modular
 
 let routes = [
   { path: "/", component: Home },
@@ -49,21 +46,6 @@ const App = () => {
             {routes.map((route) => (
               <Route exact path={route.path} component={route.component} />
             ))}
-            {/* <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={Authentication} />
-            <Route exact path="/reports" component={AllReports} />
-            <Route exact path="/newReport" component={CreateReportForm} />
-            <Route exact path="/map" component={Map} />
-            <Route exact path="/pet/:id" component={SinglePet} />
-            <Route
-              exact
-              path="*"
-              render={() => (
-                <h1 className="text-center" id="front">
-                  PAGE DOESN'T EXIST. PLEASE START AT THE 'WELCOME' LINK!
-                </h1>
-              )}
-            /> */}
           </Switch>
         </main>
         <footer className={classes.footer}>
