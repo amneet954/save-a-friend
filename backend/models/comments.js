@@ -10,6 +10,9 @@ const comment = new Schema({
     required: true,
     type: String,
   },
+  username: {
+    type: String,
+  },
   createdAt: {
     default: Date.now(),
     type: Date,

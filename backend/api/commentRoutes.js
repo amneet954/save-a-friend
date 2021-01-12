@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const axios = require("axios");
-const { Comment } = require("../models");
+const { Comment, User } = require("../models");
 
 router.get("/:userId", async (req, res) => {
   try {
@@ -25,9 +25,12 @@ router.get("/:userId/:commentId", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     let { content, userId } = req.body;
+    const user = await User.findOne({ _id: userId });
+    const { username } = user;
     const newComment = await new Comment({
       content,
       userId,
+      username,
     });
     await newComment.save();
     res.send(newComment);
@@ -48,3 +51,10 @@ router.delete("/:userId/:commentId", async (req, res) => {
 });
 
 module.exports = router;
+
+// content: "idk4"
+// createdAt: "2021-01-12T00:52:48.857Z"
+// userId: "5fcb1f6be50d881ab64001f3"
+// username: "asandhu"
+// __v: 0
+// _id: "5ffcf2e8b018ab4c5c4e1fb3"
