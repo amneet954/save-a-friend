@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { gettingSingleReport } from "../store";
-
+import Comment from "./Comment";
 const SinglePet = ({ match }) => {
   const allState = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -24,6 +24,7 @@ const SinglePet = ({ match }) => {
           style={{ width: "500px" }}
         />
       ) : null}
+      {report.file ? <Comment report={report} userId={id} /> : null}
     </div>
   );
 };

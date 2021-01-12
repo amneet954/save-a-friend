@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { reportCreation } from "../store";
-import { Button, Container } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import { Button, Container, TextField } from "@material-ui/core";
 import { Redirect } from "react-router-dom";
 import useStyles from "./style/index.js";
 
