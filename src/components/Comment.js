@@ -1,38 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import useStyles from "./style/index.js";
-import axios from "axios";
-const Comment = ({ userId, report }) => {
-  const [allComments, setAllComments] = useState([]);
-  const getComments = async (userId) => {
-    const response = await axios({
-      method: "GET",
-      withCredentials: true,
-      baseURL: "http://localhost:4000/comment/5fcb1f6be50d881ab64001f3",
-    });
-    const { data } = response;
-    setAllComments(data);
-    console.log("Wake Up: ", data);
-  };
+import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
 
-  useEffect(() => {
-    getComments();
-  }, []);
-
+const Comment = ({ allComments }) => {
   return (
     <div>
       <h1>Comment Section</h1>
-      {userId ? (
+      <Divider />
+      {allComments.length > 0 ? (
         <span>
           {allComments.map((comment, idx) => {
             let time = comment.createdAt;
-            let end = time.indexOf("T");
-            time = time.slice(0, end);
+            let index = time.lastIndexOf(":");
+            let firstTime = time.slice(0, index);
+            let lastIdx = time.lastIndexOf(" ") + 1;
+            let AMorPM = time.slice(lastIdx);
             return (
-              <span key={idx}>
-                <h1>Content: {comment.content}</h1>
-                <h3>Posted By: {comment.username} </h3>
-                <h5>Date: {time}</h5>
+              <span>
+                <Paper style={{ padding: "40px 20px" }}>
+                  <Grid container wrap="nowrap" spacing={2}>
+                    <Grid item>
+                      <Avatar alt="Remy Sharp" />
+                    </Grid>
+                    <Grid justifyContent="left" item xs zeroMinWidth>
+                      <h3 style={{ margin: 0, textAlign: "left" }}>
+                        {comment.username}
+                      </h3>
+                      {/* <p style={{ textAlign: "left" }}>{comment.content}</p> */}
+                      <p style={{ textAlign: "left" }}>{comment.content}</p>
+                      <p style={{ textAlign: "left", color: "gray" }}>
+                        Posted at: {firstTime} {AMorPM} EST
+                      </p>
+                    </Grid>
+                  </Grid>
+                </Paper>
               </span>
             );
           })}
