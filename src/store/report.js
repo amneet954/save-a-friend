@@ -21,7 +21,15 @@ export const gettingSingleReport = (petId) => async (dispatch) => {
       baseURL: `http://localhost:4000/report/pet/${petId}`,
     });
     let { data } = response;
-    dispatch(getReport(data));
+
+    let commentReponse = await axios({
+      method: "GET",
+      withCredentials: true,
+      baseURL: `http://localhost:4000/comment/${petId}`,
+    });
+    let commentData = commentReponse.data;
+
+    dispatch(getReport({ data, commentData }));
   } catch (error) {
     console.log(error);
     dispatch(getReport({ error: error }));

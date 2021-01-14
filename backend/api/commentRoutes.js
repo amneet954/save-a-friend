@@ -2,21 +2,43 @@ const router = require("express").Router();
 const axios = require("axios");
 const { Comment, User } = require("../models");
 
-router.get("/:userId", async (req, res) => {
+// router.get("/:userId", async (req, res) => {
+//   try {
+//     const { userId } = req.params;
+//     const response = await Comment.find({ userId });
+//     res.send(response);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
+router.get("/:petCommentId", async (req, res) => {
   try {
-    const { userId } = req.params;
-    const response = await Comment.find({ userId });
+    const { petCommentId } = req.params;
+    const response = await Comment.find({ petCommentId });
     res.send(response);
   } catch (error) {
     console.log(error);
   }
 });
 
-router.get("/:userId/:commentId", async (req, res) => {
+router.get("/:userId/:petCommentId", async (req, res) => {
   try {
-    const { commentId, userId } = req.params;
-    const response = await Comment.findOne({ _id: commentId, userId });
+    const { petCommentId } = req.params;
+    const response = await Comment.findOne({ petCommentId });
     res.json(response);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//GET ALL FOR ONE PET
+router.get("/singleCommentPage/:petCommentId", async (req, res) => {
+  try {
+    const { petCommentId } = req.params;
+    //const response = await Comment.find({ petCommentId });
+    const response = await Comment.findAll({ petCommentId });
+    res.send(response);
   } catch (error) {
     console.log(error);
   }
@@ -24,13 +46,15 @@ router.get("/:userId/:commentId", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    let { content, userId } = req.body;
+    let { content, userId, petCommentId } = req.body;
+    console.log(petCommentId);
     const user = await User.findOne({ _id: userId });
     const { username } = user;
     const newComment = await new Comment({
       content,
       userId,
       username,
+      petCommentId,
     });
     await newComment.save();
     res.send(newComment);
