@@ -3,6 +3,7 @@ import axios from "axios";
 //Action Types
 const CREATE_REPORT = "CREATE_REPORT";
 const GET_REPORT = "GET_REPORT";
+const FOUND_PET = "FOUND_PET";
 
 //Initial State
 const defaultReport = {};
@@ -11,8 +12,24 @@ const defaultReport = {};
 
 const createReport = (report) => ({ type: CREATE_REPORT, report });
 const getReport = (singleReport) => ({ type: GET_REPORT, singleReport });
+const foundPet = (foundPet) => ({ type: FOUND_PET, foundPet });
 
 //THUNK CREATOR
+
+export const petWasFound = (petId) => async (dispatch) => {
+  try {
+    const response = await axios({
+      method: "PUT",
+      baseURL: `http://localhost:4000/report/pet/found/${petId}`,
+      withCredentials: true,
+    });
+    let { data } = response;
+
+    dispatch(foundPet(data));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const gettingSingleReport = (petId) => async (dispatch) => {
   try {
@@ -59,6 +76,8 @@ let reportReducer = (state = defaultReport, action) => {
       return action.report;
     case GET_REPORT:
       return action.singleReport;
+    case FOUND_PET:
+      return action.foundPet;
     default:
       return state;
   }

@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 const { model, Schema } = mongoose;
 
+const time = () => {
+  const value = Date.now();
+  var date = new Date(value);
+  let final = date.toLocaleString("en-US", { timeZone: "America/New_York" });
+  return final;
+};
 const report = new Schema({
   userId: {
     required: true,
@@ -45,8 +51,8 @@ const report = new Schema({
     type: Boolean,
   },
   createdAt: {
-    default: Date.now(),
-    type: Date,
+    default: time(),
+    type: String,
   },
 });
 

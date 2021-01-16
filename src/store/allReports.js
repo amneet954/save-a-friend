@@ -10,12 +10,12 @@ const GET_REPORTS = "GET_REPORTS";
 const getAllReports = (report) => ({ type: GET_REPORTS, report });
 
 //Thunk
-export const gettingAllReports = (id) => async (dispatch) => {
+export const gettingAllReports = () => async (dispatch) => {
   try {
     let response = await axios({
       method: "GET",
       withCredentials: true,
-      url: `http://localhost:4000/report/${id}`,
+      url: `http://localhost:4000/report/`,
     });
     let { data } = response;
     dispatch(getAllReports(data));

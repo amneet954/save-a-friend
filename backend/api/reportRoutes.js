@@ -46,10 +46,20 @@ connect.once("open", () => {
 });
 
 //GET ALL REPORTS ROUTE
-router.get("/:userId", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    const query = await Report.find({ userId });
+    // const query = await Report.find({ userId });
+    const query = await Report.find();
+    res.send(query);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/foundPets", async (req, res, next) => {
+  try {
+    // const query = await Report.find({ userId });
+    const query = await Report.find({ found: true });
     res.send(query);
   } catch (error) {
     console.log(error);
@@ -149,6 +159,20 @@ router.route("/file").post(upload.single("file"), async (req, res, next) => {
     });
     await newReport.save();
     res.send(newReport);
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+});
+
+//PET WAS FOUND
+router.put("/pet/found/:petId", async (req, res) => {
+  try {
+    const { petId } = req.params;
+    const filter = { _id: petId };
+    const update = { found: true };
+    let newArg = { new: true };
+    const updatedReport = await Report.findOneAndUpdate(filter, update, newArg);
+    res.send(updatedReport);
   } catch (error) {
     console.log("Error: ", error);
   }

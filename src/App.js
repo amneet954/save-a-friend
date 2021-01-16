@@ -7,6 +7,7 @@ import {
   Home,
   Map,
   SinglePet,
+  FoundPets,
   ErrorPage,
 } from "./components";
 import { Typography, Container } from "@material-ui/core";
@@ -32,6 +33,7 @@ let routes = [
   { path: "/newReport", component: CreateReportForm },
   { path: "/map", component: Map },
   { path: "/pet/:id", component: SinglePet },
+  { path: "/foundFriends", component: FoundPets },
   { path: "*", component: ErrorPage },
 ];
 

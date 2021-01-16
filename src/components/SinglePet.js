@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { gettingSingleReport } from "../store";
+import { gettingSingleReport, petWasFound } from "../store";
 import axios from "axios";
 import Comment from "./Comment";
 const SinglePet = ({ match }) => {
@@ -32,7 +32,22 @@ const SinglePet = ({ match }) => {
             style={{ width: "500px" }}
           />
         ) : null}
-
+        {report.data ? (
+          <span>
+            {user._id === report.data.query.userId ? (
+              <button
+                onClick={(event) => {
+                  event.preventDefault();
+                  let petId = report.data.query._id;
+                  dispatch(petWasFound(petId));
+                  console.log("from on click: ", petId);
+                }}
+              >
+                Found Me?
+              </button>
+            ) : null}
+          </span>
+        ) : null}
         {report.commentData.length > 0 ? (
           <Comment
             allComments={report.commentData}
