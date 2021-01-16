@@ -5,4 +5,5 @@ export { default as CreateReportForm } from "./CreateReportForm";
 export { default as AllReports } from "./AllReports";
 export { default as Map } from "./Map";
 export { default as SinglePet } from "./SinglePet";
+export { default as FoundPets } from "./FoundPets";
 export { default as ErrorPage } from "./ErrorPage";

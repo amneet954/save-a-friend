@@ -10,7 +10,7 @@ const AllReports = () => {
   const { user, allReports } = state;
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(gettingAllReports(user._id));
+    dispatch(gettingAllReports());
     // eslint-disable-next-line
   }, []);
 
