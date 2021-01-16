@@ -2,8 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import useStyles from "./style/index.js";
 import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
-
-const Comment = ({ allComments }) => {
+import { Button, Container, TextField } from "@material-ui/core";
+import axios from "axios";
+import { creatingComment } from "../store";
+const Comment = ({ allComments, petCommentId, userId, updateComments }) => {
+  let helperText = "Write your comment here";
+  const classes = useStyles();
+  const [content, setContent] = useState("");
+  const dispatch = useDispatch();
+  const createComment = async (petCommentId, userId, content, event) => {
+    event.preventDefault();
+    dispatch(creatingComment(petCommentId, userId, content));
+    setContent("");
+    updateComments();
+  };
   return (
     <div>
       <h1>Comment Section</h1>
@@ -42,6 +54,23 @@ const Comment = ({ allComments }) => {
       ) : (
         <h1>Create a Comment here</h1>
       )}
+      <form
+        onSubmit={(event) => {
+          createComment(petCommentId, userId, content, event);
+        }}
+      >
+        <TextField
+          type="text"
+          fullWidth
+          required
+          value={content}
+          helperText={helperText}
+          onChange={(event) => setContent(event.target.value)}
+        />
+        <Button type="submit" variant="contained" color="primary">
+          Post Comment
+        </Button>
+      </form>
     </div>
   );
 };

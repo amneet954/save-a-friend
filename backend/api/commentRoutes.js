@@ -46,6 +46,7 @@ router.get("/singleCommentPage/:petCommentId", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
+    //petCommentId is the same as petId
     let { content, userId, petCommentId } = req.body;
     console.log(petCommentId);
     const user = await User.findOne({ _id: userId });
