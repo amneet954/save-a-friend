@@ -6,20 +6,24 @@ import Comment from "./Comment";
 const SinglePet = ({ match }) => {
   const allState = useSelector((state) => state);
   const dispatch = useDispatch();
-  const { report } = allState;
+  const { report, user } = allState;
   const { id } = match.params;
+  const [updated] = useState(false);
+
+  const updateComments = () => {
+    dispatch(gettingSingleReport(id));
+  };
 
   useEffect(() => {
     dispatch(gettingSingleReport(id));
     // eslint-disable-next-line
   }, []);
-  console.log(report);
 
   if (report.data) {
     return (
       <div>
         <h1>hi</h1>
-        <button onClick={() => console.log(report.data.query)}>test</button>
+        <button onClick={() => console.log(updated)}>test</button>
 
         {report.data ? (
           <img
@@ -30,9 +34,19 @@ const SinglePet = ({ match }) => {
         ) : null}
 
         {report.commentData.length > 0 ? (
-          <Comment allComments={report.commentData} />
+          <Comment
+            allComments={report.commentData}
+            petCommentId={report.data.query._id}
+            userId={user._id}
+            updateComments={updateComments}
+          />
         ) : (
-          <h1>No Comments to Display</h1>
+          <Comment
+            allComments={report.commentData}
+            petCommentId={report.data.query._id}
+            userId={user._id}
+            updateComments={updateComments}
+          />
         )}
       </div>
     );
