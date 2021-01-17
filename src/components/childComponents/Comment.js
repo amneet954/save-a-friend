@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import useStyles from "./style/index.js";
+import useStyles from "../style/index.js";
 import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
 import { Button, Container, TextField } from "@material-ui/core";
-import axios from "axios";
-import { creatingComment } from "../store";
+import { creatingComment } from "../../store";
+
 const Comment = ({ allComments, petCommentId, userId, updateComments }) => {
   let helperText = "Write your comment here";
   const classes = useStyles();
