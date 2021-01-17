@@ -46,9 +46,9 @@ const report = new Schema({
     type: String,
   },
   found: {
-    default: false,
+    default: "lost",
     required: true,
-    type: Boolean,
+    type: String,
   },
   createdAt: {
     default: time(),
