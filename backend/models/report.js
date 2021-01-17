@@ -22,7 +22,7 @@ const report = new Schema({
     type: String,
   },
   lastTimeOfUpdate: {
-    default: Date.now(),
+    default: time(),
     type: Date,
   },
   contactEmail: {
