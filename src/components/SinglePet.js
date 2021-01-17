@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { gettingSingleReport, petWasFound } from "../store";
-import axios from "axios";
-import Comment from "./Comment";
+import { Comment } from "./childComponents";
+
 const SinglePet = ({ match }) => {
   const allState = useSelector((state) => state);
   const dispatch = useDispatch();
