@@ -56,10 +56,14 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/foundPets", async (req, res, next) => {
+//SEARCHING FOR LOST OR FOUND PETS
+router.get("/foundPets/:truthy", async (req, res, next) => {
   try {
-    // const query = await Report.find({ userId });
-    const query = await Report.find({ found: true });
+    const { truthy } = req.params;
+
+    const query = await Report.find({ found: truthy });
+
+    console.log("QUERY HERE: ", query);
     res.send(query);
   } catch (error) {
     console.log(error);
@@ -169,7 +173,7 @@ router.put("/pet/found/:petId", async (req, res) => {
   try {
     const { petId } = req.params;
     const filter = { _id: petId };
-    const update = { found: true };
+    const update = { found: "found" };
     let newArg = { new: true };
     const updatedReport = await Report.findOneAndUpdate(filter, update, newArg);
     res.send(updatedReport);
