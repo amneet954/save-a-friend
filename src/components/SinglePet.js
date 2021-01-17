@@ -24,7 +24,7 @@ const SinglePet = ({ match }) => {
       <div>
         <h1>hi</h1>
         <button onClick={() => console.log(updated)}>test</button>
-
+        <button> FIND ME ON THE MAP!</button>
         {report.data ? (
           <img
             src={`http://localhost:4000/report/pet/${id}/${report.data.file.filename}`}

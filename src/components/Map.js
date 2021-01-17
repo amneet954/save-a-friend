@@ -10,12 +10,11 @@ import useStyles from "./style";
 let accessToken =
   "pk.eyJ1IjoiYW1uZWV0OTU0IiwiYSI6ImNqdjJpd215dzB5azIzeXFvZDMxbmk2ZDYifQ.FIIav70z0itM7EsJHAe_6A";
 
-const Map = () => {
+const Map = ({ match }) => {
   const classes = useStyles();
   let [zipCodes, setZipCodes] = useState({});
   const state = useSelector((state) => state);
-  let { user, allReports } = state;
-
+  let { user, allReports, report } = state;
   const initalDispatch = async () => {
     await dispatch(gettingAllReports(user._id));
     let obj = {};
@@ -32,19 +31,30 @@ const Map = () => {
     setZipCodes(obj);
   };
 
-  useEffect(() => {
-    if (Object.keys(zipCodes) < 1) initalDispatch();
-  });
-
-  const dispatch = useDispatch();
-
   let [viewport, setViewport] = useState({
     width: 750,
     height: 750,
     latitude: 40.68421,
     longitude: -73.83163,
-    zoom: 8,
+    zoom: 6,
   });
+
+  let [notSwitched, setNotSwitched] = useState(true);
+  let singleReport = report.geo ? report.geo : report.data.query.geo;
+
+  useEffect(() => {
+    if (Object.keys(zipCodes) < 1) initalDispatch();
+    if (singleReport && notSwitched) {
+      console.log(singleReport);
+      let longitude = singleReport.longitude;
+      let latitude = singleReport.latitude;
+      setViewport({ ...viewport, longitude, latitude });
+      setNotSwitched(false);
+    }
+  });
+
+  const dispatch = useDispatch();
+
   const handleViewportChange = (viewport) => {
     setViewport(viewport);
   };

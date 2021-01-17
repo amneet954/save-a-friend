@@ -77,6 +77,14 @@ const CreateReportForm = () => {
   } else if (username) {
     return (
       <div>
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            setRedirect(true);
+          }}
+        >
+          redirect button
+        </button>
         <h1 className={classes.title}>Hi {username}, let's save your pet!</h1>
         <Container maxWidth="sm">
           <form
