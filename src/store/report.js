@@ -18,14 +18,26 @@ const foundPet = (foundPet) => ({ type: FOUND_PET, foundPet });
 
 export const petWasFound = (petId) => async (dispatch) => {
   try {
-    const response = await axios({
+    await axios({
       method: "PUT",
       baseURL: `http://localhost:4000/report/pet/found/${petId}`,
       withCredentials: true,
     });
+
+    const response = await axios({
+      method: "GET",
+      baseURL: `http://localhost:4000/report/pet/${petId}`,
+    });
     let { data } = response;
 
-    dispatch(foundPet(data));
+    let commentReponse = await axios({
+      method: "GET",
+      withCredentials: true,
+      baseURL: `http://localhost:4000/comment/${petId}`,
+    });
+    let commentData = commentReponse.data;
+
+    dispatch(foundPet({ data, commentData }));
   } catch (error) {
     console.log(error);
   }
