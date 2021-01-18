@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { gettingSingleReport, petWasFound } from "../store";
 import { Comment } from "./childComponents";
+import { Redirect } from "react-router-dom";
 
 const SinglePet = ({ match }) => {
+  let [redirect, setRedirect] = useState(false);
   const allState = useSelector((state) => state);
   const dispatch = useDispatch();
   const { report, user } = allState;
@@ -19,12 +21,12 @@ const SinglePet = ({ match }) => {
     // eslint-disable-next-line
   }, []);
 
-  if (report.data) {
+  if (redirect === true) {
+    return <Redirect to="map" />;
+  } else if (report.data) {
     return (
       <div>
-        <h1>hi</h1>
-        <button onClick={() => console.log(updated)}>test</button>
-        <button> FIND ME ON THE MAP!</button>
+        <button onClick={() => setRedirect(true)}> FIND ME ON THE MAP!</button>
         {report.data ? (
           <img
             src={`http://localhost:4000/report/pet/${id}/${report.data.file.filename}`}
