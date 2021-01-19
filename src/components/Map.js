@@ -15,6 +15,7 @@ const Map = ({ match }) => {
   let [zipCodes, setZipCodes] = useState({});
   const state = useSelector((state) => state);
   let { user, allReports, report } = state;
+
   const initalDispatch = async () => {
     await dispatch(gettingAllReports(user._id));
     let obj = {};
@@ -40,20 +41,33 @@ const Map = ({ match }) => {
   });
 
   let [notSwitched, setNotSwitched] = useState(true);
-  let singleReport = report.geo ? report.geo : report.data.query.geo;
 
+  const dispatch = useDispatch();
+  const ObjSize = (obj) => {
+    let size = 0;
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) size += 1;
+    }
+    return size;
+  };
   useEffect(() => {
     if (Object.keys(zipCodes) < 1) initalDispatch();
-    if (singleReport && notSwitched) {
-      console.log(singleReport);
-      let longitude = singleReport.longitude;
-      let latitude = singleReport.latitude;
-      setViewport({ ...viewport, longitude, latitude });
+
+    let objectSize = ObjSize(report);
+
+    if (objectSize > 0) {
+      let singleReport = report.geo ? report.geo : report.data.query.geo;
+      if (singleReport && notSwitched) {
+        console.log(singleReport);
+        let longitude = singleReport.longitude;
+        let latitude = singleReport.latitude;
+        setViewport({ ...viewport, longitude, latitude });
+        setNotSwitched(false);
+      }
+    } else {
       setNotSwitched(false);
     }
   });
-
-  const dispatch = useDispatch();
 
   const handleViewportChange = (viewport) => {
     setViewport(viewport);
