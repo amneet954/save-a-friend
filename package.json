@@ -43,7 +43,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "use-supercluster": "^0.2.9",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "zipcodes": "^8.0.0"
   },
   "scripts": {
     "start": "concurrently \"nodemon backend arg\" \"react-scripts start arg\"",

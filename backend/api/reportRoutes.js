@@ -9,6 +9,7 @@ const GridFsStorage = require("multer-gridfs-storage");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 let url = `mongodb://localhost:27017/save-a-friend`;
+let zipcodeSearch = require("zipcodes");
 
 const storage = new GridFsStorage({
   url,
@@ -53,6 +54,29 @@ router.get("/", async (req, res, next) => {
     res.send(query);
   } catch (error) {
     console.log(error);
+  }
+});
+
+// GET PETS THAT ARE LOST IN NEARBY AREA
+router.get("/homePage/", async (req, res) => {
+  try {
+    const zipCodeResponse = await axios({
+      method: "GET",
+      baseURL: "http://ip-api.com/json/",
+    });
+
+    const { data } = zipCodeResponse;
+    const { zip } = data;
+    var radius = zipcodeSearch.radius(zip, 2);
+
+    const response = await Report.find({
+      zipCode: { $in: radius },
+      found: "lost",
+    });
+
+    res.send(response);
+  } catch (error) {
+    console.log("Error: ", error);
   }
 });
 
