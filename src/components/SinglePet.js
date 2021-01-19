@@ -22,11 +22,10 @@ const SinglePet = ({ match }) => {
   }, []);
 
   if (redirect === true) {
-    return <Redirect to="map" />;
+    return <Redirect to="/map" />;
   } else if (report.data) {
     return (
       <div>
-        <button onClick={() => setRedirect(true)}> FIND ME ON THE MAP!</button>
         {report.data ? (
           <img
             src={`http://localhost:4000/report/pet/${id}/${report.data.file.filename}`}
@@ -34,9 +33,11 @@ const SinglePet = ({ match }) => {
             style={{ width: "500px" }}
           />
         ) : null}
+
         {report.data ? (
           <span>
-            {user._id === report.data.query.userId ? (
+            {user._id === report.data.query.userId &&
+            report.data.query.found == "lost" ? (
               <button
                 onClick={(event) => {
                   event.preventDefault();
@@ -46,6 +47,12 @@ const SinglePet = ({ match }) => {
                 }}
               >
                 Found Me?
+              </button>
+            ) : null}
+            {report.data.query.found == "lost" ? (
+              <button onClick={() => setRedirect(true)}>
+                {" "}
+                FIND ME ON THE MAP!
               </button>
             ) : null}
           </span>

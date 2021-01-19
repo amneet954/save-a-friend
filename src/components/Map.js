@@ -56,7 +56,9 @@ const Map = ({ match }) => {
     let objectSize = ObjSize(report);
 
     if (objectSize > 0) {
-      let singleReport = report.geo ? report.geo : report.data.query.geo;
+      let singleReport = "";
+      if (report.data) singleReport = report.data.query.geo;
+      else singleReport = report.geo;
       if (singleReport && notSwitched) {
         console.log(singleReport);
         let longitude = singleReport.longitude;

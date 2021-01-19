@@ -8,13 +8,13 @@ const Home = () => {
   const classes = useStyles();
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
-  let [notSwitched, setNotSwitched] = useState(true);
   const { user, allReports } = state;
   const { username } = user;
+
   useEffect(() => {
     dispatch(gettingLocalActivePets());
   }, []);
-  console.log(state.allReports);
+
   return (
     <Container maxWidth="sm">
       {username ? (
