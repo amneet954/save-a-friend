@@ -25,28 +25,6 @@ export const me = () => async (dispatch) => {
   }
 };
 
-export const register = (username, password, email, zipCode) => async (
-  dispatch
-) => {
-  try {
-    let response = await axios({
-      method: "POST",
-      data: {
-        username: username,
-        password: password,
-        email: email,
-        zipCode: zipCode,
-      },
-      withCredentials: true,
-      url: "http://localhost:4000/auth/register",
-    });
-    let { data } = response;
-    dispatch(registerUser(data));
-  } catch (error) {
-    return dispatch(registerUser({ error: error }));
-  }
-};
-
 export const login = (username, password) => async (dispatch) => {
   try {
     let response = await axios({
@@ -64,6 +42,27 @@ export const login = (username, password) => async (dispatch) => {
     return dispatch(getUser({ error: error }));
   }
 };
+
+export const register =
+  (username, password, email, zipCode) => async (dispatch) => {
+    try {
+      let response = await axios({
+        method: "POST",
+        data: {
+          username: username,
+          password: password,
+          email: email,
+          zipCode: zipCode,
+        },
+        withCredentials: true,
+        url: "http://localhost:4000/auth/register",
+      });
+      let { data } = response;
+      dispatch(registerUser(data));
+    } catch (error) {
+      return dispatch(registerUser({ error: error }));
+    }
+  };
 
 export const logout = () => async (dispatch) => {
   try {

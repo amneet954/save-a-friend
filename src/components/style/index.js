@@ -36,28 +36,19 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.25),
+    backgroundColor: fade(theme.palette.common.white, 0.9),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.35),
+      backgroundColor: fade(theme.palette.common.white, 1.0),
     },
     marginLeft: 0,
-    width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(1),
       width: "auto",
     },
+    display: "flex",
   },
   outSearchLayer: {
-    paddingRight: "5%",
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    paddingLeft: "5%",
   },
   inputRoot: {
     color: "inherit",

@@ -11,6 +11,8 @@ const mongoose = require("mongoose");
 let url = `mongodb://localhost:27017/save-a-friend`;
 let zipcodeSearch = require("zipcodes");
 
+
+//Make thiss an async function?
 const storage = new GridFsStorage({
   url,
   file: (req, file) => {
@@ -80,7 +82,7 @@ router.get("/homePage/", async (req, res) => {
   }
 });
 
-//SEARCHING FOR LOST OR FOUND PETS
+//SEARCHING FOR FOUND PETS
 router.get("/foundPets/:truthy", async (req, res, next) => {
   try {
     const { truthy } = req.params;
@@ -154,6 +156,7 @@ router.get("/pet/:petId/:id", async (req, res) => {
   }
 });
 
+//POST LOST PET
 //http://localhost:4000/report/file
 router.route("/file").post(upload.single("file"), async (req, res, next) => {
   try {

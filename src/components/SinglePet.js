@@ -37,7 +37,7 @@ const SinglePet = ({ match }) => {
         {report.data ? (
           <span>
             {user._id === report.data.query.userId &&
-            report.data.query.found == "lost" ? (
+            report.data.query.found === "lost" ? (
               <button
                 onClick={(event) => {
                   event.preventDefault();
@@ -49,9 +49,9 @@ const SinglePet = ({ match }) => {
                 Found Me?
               </button>
             ) : null}
-            {report.data.query.found == "lost" ? (
+            {report.data.query.found === "lost" ? (
+              //FIND A WAY TO CHANGE THE LONGITUDE AND LATTITUDE TO FOCUS ON THE PET IF REDIRECT IS TRUE MAYBE?
               <button onClick={() => setRedirect(true)}>
-                {" "}
                 FIND ME ON THE MAP!
               </button>
             ) : null}

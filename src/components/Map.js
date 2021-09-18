@@ -32,6 +32,8 @@ const Map = ({ match }) => {
     setZipCodes(obj);
   };
 
+
+  //GRAB VALUES FROM IP API FOR LAT/LONG
   let [viewport, setViewport] = useState({
     width: 750,
     height: 750,
