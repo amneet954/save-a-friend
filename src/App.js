@@ -9,7 +9,7 @@ import {
   FoundPets,
   Home,
   Map,
-  Navbar,
+  // Navbar,
   SearchPage,
   SinglePet,
 } from "./components";
@@ -84,7 +84,7 @@ const App = () => {
       <CssBaseline />
       <BrowserRouter>
         <div>
-          <Navbar />
+          {/* <Navbar /> */}
           <main>
             <Switch>
               {routes.map((route, idx) => (
