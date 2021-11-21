@@ -56,7 +56,7 @@
     "zipcodes": "^8.0.0"
   },
   "scripts": {
-    "start": "concurrently \"nodemon backend arg\" \"react-scripts start arg\"",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "protoTest": "react-scripts test",
     "test": "react-scripts start",
@@ -82,6 +82,5 @@
   },
   "engines": {
     "node": "14.18.0"
-  },
-  "proxy": "http://localhost:4000"
+  }
 }
