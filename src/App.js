@@ -19,6 +19,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import useStyles from "./components/style";
+import Navbar from "./components/Navbar";
 
 let routes = [
   { path: "/", component: Home },
@@ -84,7 +85,7 @@ const App = () => {
       <CssBaseline />
       <BrowserRouter>
         <div>
-          {/* <Navbar /> */}
+          <Navbar />
           <main>
             <Switch>
               {routes.map((route, idx) => (
