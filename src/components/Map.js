@@ -1,30 +1,35 @@
 import React, { useState, useRef, useEffect } from "react";
+
 import { useSelector, useDispatch } from "react-redux";
-import { gettingAllReports } from "../store";
+import { gettingFoundPetsType } from "../store";
 import useSupercluster from "use-supercluster";
+import { Button, Container, Grid } from "@material-ui/core";
 import ReactMapGL, { Marker, FlyToInterpolator, Popup } from "react-map-gl";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
-import { Button } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 import useStyles from "./style";
-let accessToken =
-  "pk.eyJ1IjoiYW1uZWV0OTU0IiwiYSI6ImNqdjJpd215dzB5azIzeXFvZDMxbmk2ZDYifQ.FIIav70z0itM7EsJHAe_6A";
+import { Redirect } from "react-router-dom";
+let accessToken = process.env.REACT_APP_MAPBOX_API;
 
 const Map = ({ match }) => {
+  let history = useHistory();
   const classes = useStyles();
+
   let [zipCodes, setZipCodes] = useState({});
   const state = useSelector((state) => state);
-  let { user, allReports, report } = state;
+  let { allReports, report } = state;
 
   const initalDispatch = async () => {
-    await dispatch(gettingAllReports(user._id));
+    window.scrollTo(0, 0);
+    await dispatch(gettingFoundPetsType("lost"));
     let obj = {};
     for (let i = 0; i < allReports.length; i++) {
       let current = allReports[i];
       let { geo, petName, _id } = current;
       let { longitude, latitude } = geo;
-      longitude = Number(longitude.toFixed(6));
-      latitude = Number(latitude.toFixed(6));
+      longitude = Number(longitude.toFixed(5));
+      latitude = Number(latitude.toFixed(5));
       let value = `${longitude},${latitude}`;
       if (!obj[value]) obj[value] = [petName + " " + _id];
       else obj[value].push(petName + " " + _id);
@@ -32,14 +37,12 @@ const Map = ({ match }) => {
     setZipCodes(obj);
   };
 
-
-  //GRAB VALUES FROM IP API FOR LAT/LONG
   let [viewport, setViewport] = useState({
-    width: 750,
-    height: 750,
-    latitude: 40.68421,
-    longitude: -73.83163,
-    zoom: 6,
+    width: "80vw",
+    height: "75vh",
+    latitude: report.data ? report.data.query.geo.latitude : 40.68421,
+    longitude: report.data ? report.data.query.geo.longitude : -73.83163,
+    zoom: 14,
   });
 
   let [notSwitched, setNotSwitched] = useState(true);
@@ -52,6 +55,7 @@ const Map = ({ match }) => {
     }
     return size;
   };
+
   useEffect(() => {
     if (Object.keys(zipCodes) < 1) initalDispatch();
 
@@ -62,7 +66,6 @@ const Map = ({ match }) => {
       if (report.data) singleReport = report.data.query.geo;
       else singleReport = report.geo;
       if (singleReport && notSwitched) {
-        console.log(singleReport);
         let longitude = singleReport.longitude;
         let latitude = singleReport.latitude;
         setViewport({ ...viewport, longitude, latitude });
@@ -109,177 +112,217 @@ const Map = ({ match }) => {
   const [selectedObj, setSelectObj] = useState({});
   const [multSelectedObj, setMultObjs] = useState({});
 
-  return (
-    <div className={classes.allReportsGridPadding}>
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        className={classes.zoomOutButton}
-        onClick={() => {
-          setSelectObj({});
-          setMultObjs({});
-          setViewport({
-            zoom: 8,
-            width: 750,
-            height: 750,
-            latitude: 40.68421,
-            longitude: -73.83163,
-          });
-        }}
-      >
-        Zoom Out
-      </Button>
-      <ReactMapGL
-        {...viewport}
-        minZoom={5}
-        maxZoom={20}
-        mapboxApiAccessToken={accessToken}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
-        onViewportChange={(viewport) => handleViewportChange(viewport)}
-        ref={mapRef}
-        attributionControl={false}
-        className={classes.reactMapPlacement}
-      >
-        {clusters.map((cluster) => {
-          let [longitude, latitude] = cluster.geometry.coordinates;
-          longitude = Number(longitude.toFixed(6));
-          latitude = Number(latitude.toFixed(6));
-          const {
-            cluster: isCluster,
-            point_count: pointCount,
-          } = cluster.properties;
+  if (!report.data) {
+    return <Redirect to="/reports" />;
+  } else {
+    return (
+      <div>
+        <ReactMapGL
+          {...viewport}
+          minZoom={5}
+          maxZoom={20}
+          mapboxApiAccessToken={accessToken}
+          mapStyle="mapbox://styles/mapbox/streets-v11"
+          onViewportChange={(viewport) => handleViewportChange(viewport)}
+          ref={mapRef}
+          attributionControl={false}
+          className={classes.reactMap}
+        >
+          {clusters.map((cluster) => {
+            let [longitude, latitude] = cluster.geometry.coordinates;
+            longitude = Number(longitude.toFixed(5));
+            latitude = Number(latitude.toFixed(5));
+            const { cluster: isCluster, point_count: pointCount } =
+              cluster.properties;
 
-          if (isCluster) {
+            if (isCluster) {
+              return (
+                <Marker
+                  key={cluster.id}
+                  latitude={latitude}
+                  longitude={longitude}
+                >
+                  <Container
+                    style={{
+                      width: `${10 + (pointCount / points.length) * 20}px`,
+                      height: `${10 + (pointCount / points.length) * 20}px`,
+                    }}
+                    onClick={() => {
+                      setSelectObj({});
+                      const expansionZoom =
+                        supercluster.getClusterExpansionZoom(cluster.id);
+
+                      setViewport({
+                        ...viewport,
+                        latitude,
+                        longitude,
+                        zoom: expansionZoom,
+                        transitionInterpolator: new FlyToInterpolator({
+                          speed: 2,
+                        }),
+                        transitionDuration: "auto",
+                      });
+                      let coords = cluster.geometry.coordinates;
+                      let long = coords[0].toFixed(5).toString();
+                      let lat = coords[1].toFixed(5).toString();
+
+                      if (zipCodes[long + "," + lat]) {
+                        let values = zipCodes[long + "," + lat];
+
+                        let arrObj = {
+                          names: values,
+                          long: Number(long),
+                          lat: Number(lat),
+                        };
+
+                        setMultObjs(arrObj);
+                      }
+                    }}
+                  >
+                    <Brightness1Icon fontSize="small" color="primary" />
+                    <h3 className={classes.markerCount}>{pointCount}</h3>
+                  </Container>
+                </Marker>
+              );
+            }
             return (
               <Marker
-                key={cluster.id}
+                key={cluster.properties.crimeId}
                 latitude={latitude}
                 longitude={longitude}
               >
-                <div
-                  style={{
-                    width: `${10 + (pointCount / points.length) * 20}px`,
-                    height: `${10 + (pointCount / points.length) * 20}px`,
-                  }}
+                <Container
                   onClick={() => {
-                    setSelectObj({});
-                    const expansionZoom = supercluster.getClusterExpansionZoom(
-                      cluster.id
-                    );
+                    setMultObjs({});
+                    let long = cluster.geometry.coordinates[0]
+                      .toFixed(5)
+                      .toString();
+                    let lat = cluster.geometry.coordinates[1]
+                      .toFixed(5)
+                      .toString();
 
+                    if (zipCodes[long + "," + lat]) {
+                      let value = zipCodes[long + "," + lat][0];
+                      let lastIdx = value.indexOf(" ");
+                      let name = value.slice(0, lastIdx);
+                      let id = value.slice(lastIdx + 1);
+
+                      setSelectObj({ id, name, long, lat });
+                    }
                     setViewport({
-                      ...viewport,
+                      width: "80vw",
+                      height: "75vh",
                       latitude,
                       longitude,
-                      zoom: expansionZoom,
+                      zoom: 20,
                       transitionInterpolator: new FlyToInterpolator({
                         speed: 2,
                       }),
                       transitionDuration: "auto",
                     });
-                    let coords = cluster.geometry.coordinates;
-                    let long = coords[0].toFixed(6).toString();
-                    let lat = coords[1].toFixed(6).toString();
-
-                    if (zipCodes[long + "," + lat]) {
-                      let values = zipCodes[long + "," + lat];
-
-                      let arrObj = {
-                        names: values,
-                        long: Number(long),
-                        lat: Number(lat),
-                      };
-                      setMultObjs(arrObj);
-                    }
                   }}
                 >
-                  <Brightness1Icon fontSize="small" />
-                  {pointCount}
-                </div>
+                  <Brightness1Icon fontSize="small" color="primary" />
+                </Container>
               </Marker>
             );
-          }
-          return (
-            <Marker
-              key={cluster.properties.crimeId}
-              latitude={latitude}
-              longitude={longitude}
+          })}
+          {multSelectedObj.names ? (
+            <Popup
+              latitude={Number(multSelectedObj.lat)}
+              longitude={Number(multSelectedObj.long)}
+              closeButton={false}
             >
-              <div
-                onClick={() => {
-                  setMultObjs({});
-                  let long = cluster.geometry.coordinates[0].toString();
-                  let lat = cluster.geometry.coordinates[1].toString();
-                  if (zipCodes[long + "," + lat]) {
-                    let value = zipCodes[long + "," + lat][0];
-                    let lastIdx = value.indexOf(" ");
-                    let name = value.slice(0, lastIdx);
-                    let id = value.slice(lastIdx + 1);
+              <Container>
+                {multSelectedObj.names.map((value, idx) => {
+                  let lastIdx = value.indexOf(" ");
+                  let name = value.slice(0, lastIdx);
+                  let id = value.slice(lastIdx + 1);
+                  return (
+                    <Container
+                      className={classes.mapPopUp}
+                      onClick={() => history.push(`/pet/${id}`)}
+                    >
+                      <Link
+                        to={`/pet/${id}`}
+                        className={classes.linkDecoration}
+                      >
+                        <h3 key={idx}>{name}</h3>
+                      </Link>
+                    </Container>
+                  );
+                })}
+              </Container>
+            </Popup>
+          ) : null}
 
-                    setSelectObj({ id, name, long, lat });
-                  }
-                  setViewport({
-                    width: 750,
-                    height: 750,
-                    latitude,
-                    longitude,
-                    zoom: 20,
-                    transitionInterpolator: new FlyToInterpolator({
-                      speed: 2,
-                    }),
-                    transitionDuration: "auto",
-                  });
-                }}
+          {selectedObj.id ? (
+            <Popup
+              latitude={Number(selectedObj.lat)}
+              longitude={Number(selectedObj.long)}
+              closeButton={false}
+            >
+              <Link
+                to={`/pet/${selectedObj.id}`}
+                className={classes.linkDecoration}
               >
-                <Brightness1Icon fontSize="small" />
-              </div>
-            </Marker>
-          );
-        })}
-        {multSelectedObj.names ? (
-          <Popup
-            latitude={Number(multSelectedObj.lat)}
-            longitude={Number(multSelectedObj.long)}
-            closeButton={false}
-          >
-            <div>
-              {multSelectedObj.names.map((value, idx) => {
-                let lastIdx = value.indexOf(" ");
-                let name = value.slice(0, lastIdx);
-                let id = value.slice(lastIdx + 1);
-                return (
-                  <div
-                    style={{ backgroundColor: "white" }}
-                    onClick={() => <Redirect to={`/pet/${id}`} />}
-                  >
-                    <Link to={`/pet/${id}`} className={classes.linkDecoration}>
-                      <h3 key={idx}>{name}</h3>
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
-          </Popup>
-        ) : null}
+                <h2>{selectedObj.name}</h2>
+              </Link>
+            </Popup>
+          ) : null}
+        </ReactMapGL>
 
-        {selectedObj.id ? (
-          <Popup
-            latitude={Number(selectedObj.lat)}
-            longitude={Number(selectedObj.long)}
-            closeButton={false}
-          >
-            <Link
-              to={`/pet/${selectedObj.id}`}
-              className={classes.linkDecoration}
+        <Grid container span>
+          <Grid item xs={6} className={classes.cardContent}>
+            <Button
+              color="primary"
+              type="submit"
+              className={classes.reactMapButtons}
+              onClick={() => {
+                setSelectObj({});
+                setMultObjs({});
+
+                setViewport({
+                  zoom: 10,
+                  width: "80vw",
+                  height: "75vh",
+                  latitude: report.data
+                    ? report.data.query.geo.latitude
+                    : 40.68421,
+                  longitude: report.data
+                    ? report.data.query.geo.longitude
+                    : -73.83163,
+                });
+              }}
             >
-              <h2>{selectedObj.name}</h2>
-            </Link>
-          </Popup>
-        ) : null}
-      </ReactMapGL>
-    </div>
-  );
+              Zoom Out
+            </Button>
+          </Grid>
+
+          <Grid item xs={6} className={classes.cardContent}>
+            <Button
+              color="primary"
+              type="submit"
+              className={classes.reactMapButtons}
+              onClick={() => {
+                let singularPet = report.data;
+
+                if (singularPet) {
+                  history.push(`/pet/${singularPet.query._id}`);
+                } else {
+                  history.push(`/reports`);
+                }
+              }}
+            >
+              {report.data
+                ? `Back to ${report.data.query.petName}'s page`
+                : "Our Lost Friends"}
+            </Button>
+          </Grid>
+        </Grid>
+      </div>
+    );
+  }
 };
 
 export default Map;

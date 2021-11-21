@@ -25,7 +25,7 @@ const pReducer = persistReducer(persistConfig, reducer);
 export const store = createStore(pReducer, middleware);
 export const persistor = persistStore(store);
 
-export * from "./user";
-export * from "./report";
 export * from "./allReports";
 export * from "./comment";
+export * from "./report";
+export * from "./user";

@@ -1,24 +1,43 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import useStyles from "../style/index.js";
 import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
-import { Button, Container, TextField } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
+import { Typography } from "@mui/material/";
 import { creatingComment } from "../../store";
 
-const Comment = ({ allComments, petCommentId, userId, updateComments }) => {
+const Comment = ({
+  allComments,
+  petName,
+  petCommentId,
+  userId,
+  updateComments,
+}) => {
   let helperText = "Write your comment here";
   const classes = useStyles();
   const [content, setContent] = useState("");
   const dispatch = useDispatch();
+
   const createComment = async (petCommentId, userId, content, event) => {
     event.preventDefault();
-    dispatch(creatingComment(petCommentId, userId, content));
+    await dispatch(creatingComment(petCommentId, userId, content, petName));
     setContent("");
     updateComments();
   };
+
+  let commentTitle =
+    allComments.length > 0 ? "Recent Updates" : `Help Us Find a Friend`;
+
   return (
-    <div>
-      <h1>Comment Section</h1>
+    <Paper className={classes.paperCommentHeader}>
+      <Typography
+        gutterBottom
+        variant="body1"
+        className={classes.paperCommentTypography}
+        component="div"
+      >
+        {commentTitle}
+      </Typography>
       <Divider />
       {allComments.length > 0 ? (
         <span>
@@ -29,19 +48,20 @@ const Comment = ({ allComments, petCommentId, userId, updateComments }) => {
             let lastIdx = time.lastIndexOf(" ") + 1;
             let AMorPM = time.slice(lastIdx);
             return (
-              <span>
-                <Paper style={{ padding: "40px 20px" }}>
+              <span className={classes.commentItem}>
+                <Paper className={classes.comment}>
                   <Grid container wrap="nowrap" spacing={2}>
                     <Grid item>
-                      <Avatar alt="Remy Sharp" />
+                      <Avatar alt="Profile Pic" />
                     </Grid>
                     <Grid justifyContent="left" item xs zeroMinWidth>
-                      <h3 style={{ margin: 0, textAlign: "left" }}>
+                      <h3 className={classes.commentUsername}>
                         {comment.username}
                       </h3>
-                      {/* <p style={{ textAlign: "left" }}>{comment.content}</p> */}
-                      <p style={{ textAlign: "left" }}>{comment.content}</p>
-                      <p style={{ textAlign: "left", color: "gray" }}>
+                      <p className={classes.commentContent}>
+                        {comment.content}
+                      </p>
+                      <p className={classes.commentPostedAt}>
                         Posted at: {firstTime} {AMorPM} EST
                       </p>
                     </Grid>
@@ -51,27 +71,44 @@ const Comment = ({ allComments, petCommentId, userId, updateComments }) => {
             );
           })}
         </span>
+      ) : null}
+      {userId ? (
+        <form
+          onSubmit={(event) => {
+            createComment(petCommentId, userId, content, event);
+            setContent("");
+          }}
+          className={classes.commentSubmit}
+        >
+          <TextField
+            fullWidth
+            required
+            label={helperText}
+            variant="filled"
+            onChange={(event) => setContent(event.target.value)}
+            className={classes.commentField}
+          />
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.commentButton}
+          >
+            Post Comment
+          </Button>
+        </form>
       ) : (
-        <h1>Create a Comment here</h1>
+        <Typography
+          gutterBottom
+          variant="body1"
+          className={classes.commentUnauth}
+          component="div"
+        >
+          Sign Up/Login to get involved in the conversation!
+        </Typography>
       )}
-      <form
-        onSubmit={(event) => {
-          createComment(petCommentId, userId, content, event);
-        }}
-      >
-        <TextField
-          type="text"
-          fullWidth
-          required
-          value={content}
-          helperText={helperText}
-          onChange={(event) => setContent(event.target.value)}
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Post Comment
-        </Button>
-      </form>
-    </div>
+    </Paper>
   );
 };
 

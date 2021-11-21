@@ -1,17 +1,8 @@
 const router = require("express").Router();
-const axios = require("axios");
 const { Comment, User } = require("../models");
+const { sendMail } = require("../utilities");
 
-// router.get("/:userId", async (req, res) => {
-//   try {
-//     const { userId } = req.params;
-//     const response = await Comment.find({ userId });
-//     res.send(response);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
+//Get All Comments for 1 Pet by Pet Comment ID
 router.get("/:petCommentId", async (req, res) => {
   try {
     const { petCommentId } = req.params;
@@ -22,6 +13,7 @@ router.get("/:petCommentId", async (req, res) => {
   }
 });
 
+//get all pet comment by the user for the specific pet
 router.get("/:userId/:petCommentId", async (req, res) => {
   try {
     const { petCommentId } = req.params;
@@ -32,11 +24,10 @@ router.get("/:userId/:petCommentId", async (req, res) => {
   }
 });
 
-//GET ALL FOR ONE PET
+//Get all comments for specific pet
 router.get("/singleCommentPage/:petCommentId", async (req, res) => {
   try {
     const { petCommentId } = req.params;
-    //const response = await Comment.find({ petCommentId });
     const response = await Comment.findAll({ petCommentId });
     res.send(response);
   } catch (error) {
@@ -44,13 +35,13 @@ router.get("/singleCommentPage/:petCommentId", async (req, res) => {
   }
 });
 
+//Create Comment
 router.post("/", async (req, res) => {
   try {
-    //petCommentId is the same as petId
-    let { content, userId, petCommentId } = req.body;
+    let { content, petName, userId, petCommentId } = req.body;
     console.log(petCommentId);
     const user = await User.findOne({ _id: userId });
-    const { username } = user;
+    const { username, email } = user;
     const newComment = await new Comment({
       content,
       userId,
@@ -58,12 +49,23 @@ router.post("/", async (req, res) => {
       petCommentId,
     });
     await newComment.save();
+    let subject = `[SAF] New Comments Regarding ${petName}'s status'`;
+    let subjectObj = { subject, type: "Lost Pet Comment" };
+    sendMail(
+      email,
+      username,
+      subjectObj,
+      petName,
+      `http://localhost:3000/pet/${petCommentId}`
+    );
     res.send(newComment);
   } catch (error) {
     console.log(error);
   }
 });
 
+//Delete Comment by ID
+//Not Front End Facing Yet
 router.delete("/:userId/:commentId", async (req, res) => {
   try {
     const { commentId, userId } = req.params;
@@ -76,10 +78,3 @@ router.delete("/:userId/:commentId", async (req, res) => {
 });
 
 module.exports = router;
-
-// content: "idk4"
-// createdAt: "2021-01-12T00:52:48.857Z"
-// userId: "5fcb1f6be50d881ab64001f3"
-// username: "asandhu"
-// __v: 0
-// _id: "5ffcf2e8b018ab4c5c4e1fb3"

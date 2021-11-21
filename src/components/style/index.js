@@ -1,24 +1,170 @@
-import { makeStyles, fade } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+
+const prefersDarkMode = window.matchMedia(
+  "(prefers-color-scheme: dark)"
+).matches;
+
+let backgroundColor = prefersDarkMode ? "#191919" : "#ffffff";
+let textColor = prefersDarkMode ? "#ffffff" : "#2E3B55";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
+  appBar: { background: backgroundColor },
+  authGrid: {
+    marginTop: "3%",
+    paddingBottom: "3%",
+    paddingLeft: "25%",
+    paddingRight: "25%",
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  authPaper: {
+    marginTop: "15%",
+    marginLeft: "20%",
+    marginRight: "20%",
+    paddingBottom: "2%",
+  },
+  authPaperContainer: { paddingTop: "2%" },
+  authFailureMessage: { paddingLeft: "33%", paddingRight: "33%" },
+  authSecondaryButtons: {
+    paddingBottom: "3%",
+    paddingLeft: "3%",
+    color: "white",
+  },
+  authSecondaryButtonContainer: { marginTop: "5%", marginLeft: "15%" },
+  authText: { textAlign: "center" },
+  authTextField: {
+    marginTop: "1%",
+    marginBottom: "1%",
+    backgroundColor: "white",
+  },
+  authTextContainer: { paddingLeft: "20%", paddingRight: "20%" },
+  buttonCenter: {
+    margin: "auto",
+    display: "block",
+  },
+  cardContent: { textAlign: "center" },
+  comment: { padding: "40px 20px", backgroundColor: backgroundColor },
+  commentButton: { marginTop: "2%", marginLeft: "40%" },
+  commentContent: { textAlign: "left", color: textColor },
+  commentField: { backgroundColor: "white" },
+  commentItem: { marginBottom: "2%" },
+  commentPostedAt: { textAlign: "left", color: "gray" },
+  commentSubmit: {
+    marginTop: "2%",
+    paddingLeft: "10%",
+    paddingRight: "10%",
+    paddingBottom: "2%",
+  },
+  commentUnauth: {
+    textAlign: "center",
+    paddingTop: "1%",
+    paddingBottom: "1%",
+    color: textColor,
+  },
+  commentUsername: { margin: 0, textAlign: "left", color: textColor },
+  footer: { marginTop: "calc(5% + 60px)", bottom: 0 },
+  footerIcon: {
+    display: "inline",
+    margin: -5,
+    marginLeft: "1%",
+    marginTop: -7,
+    fontSize: 30,
+  },
+  footerLink: { color: "inherit", display: "inline" },
+  footerText: { display: "inline", marginLeft: "2%" },
+  footerTypography: {
+    marginTop: "2%",
+    marginLeft: "10%",
+    marginRight: "10%",
+    paddingBottom: "2%",
+  },
+  gridContainer: { marginTop: "5%" },
+  gridItem: {
+    paddingBottom: "3%",
+    paddingLeft: "3%",
+  },
+  gridPadding: {
+    marginTop: "14%",
+    paddingLeft: "10%",
+    paddingRight: "10%",
+  },
+  image: {
+    margin: "auto",
+    display: "block",
+    width: "100px",
+  },
+  linkDecoration: { textDecoration: "none", color: "black" },
+  loginFields: {
+    backgroundColor: "#FFFFFF",
+    marginRight: "auto",
+    marginTop: "2%",
+    marginBottom: "2%",
+    margin: "auto",
+    display: "inline-block",
+    marginLeft: "30px",
+  },
+
+  mapContainer: {
+    marginLeft: "38%",
+    marginRight: "38%",
+    marginTop: "8%",
+    marginBottom: "4",
+  },
+  mapPopUp: { backgroundColor: "white" },
+  mapRedirectButton: { marginLeft: "2%" },
+  mapZoomOutButton: { marginRight: "2%" },
+  markerCount: {
+    color: "black",
+  },
+  navBarLink: {
+    textDecoration: "none",
+    marginLeft: "2%",
+    marginRight: "2%",
+    color: textColor,
   },
   navbarTitle: {
     flexGrow: 1,
   },
-  navBarLink: {
-    textDecoration: "none",
-    color: "white",
-    paddingRight: "5%",
+  navAuth: { color: textColor },
+  outSearchLayer: {
+    paddingLeft: "5%",
   },
-  accountButton: {
-    marginRight: "1%",
-    color: "white",
+  pageInfo: { padding: "4%", textAlign: "center", marginBottom: "2%" },
+  paperCommentHeader: {
+    background: backgroundColor,
+    marginBottom: "5%",
+    marginTop: "5%",
   },
+  paperCommentTypography: {
+    textAlign: "center",
+    paddingTop: "1%",
+    paddingBottom: "1%",
+    color: textColor,
+  },
+  reportContainer: { padding: "4%", marginLeft: "10%", marginRight: "10%" },
+  reportTextField: {
+    backgroundColor: "#FFFFFF",
+    marginTop: "1%",
+    marginBottom: "2%",
+  },
+  singlePetBody: { marginTop: "2%", marginBottom: "3%", textAlign: "center" },
+  singlePetDate: {},
+  singlePetImage: { paddingLeft: "2%", paddingRight: "2%" },
+  singlePetTitle: { textAlign: "center", paddingTop: "2%" },
+  textFieldCenter: {
+    width: "50%;",
+    marginLeft: "33%",
+    marginTop: "8%",
+    display: "block",
+  },
+  title: { textAlign: "center" },
+  titlePadding: {
+    marginLeft: "25%",
+    marginRight: "25%",
+    textAlign: "center",
+    marginTop: "16%",
+    marginBottom: "6%",
+  },
+  uploadImage: { width: "500px" },
+  whiteText: { color: "white" },
   zoomOutButton: {
     display: "block",
     marginLeft: "auto",
@@ -27,110 +173,59 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "2%",
     margin: "auto",
   },
-  reactMapPlacement: {
-    display: "block",
+
+  loginRegisterButton: {
     marginLeft: "auto",
-    marginRight: "auto",
-  },
-  linkDecoration: { textDecoration: "none", color: "black" },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.9),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 1.0),
-    },
-    marginLeft: 0,
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-    display: "flex",
-  },
-  outSearchLayer: {
-    paddingLeft: "5%",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-  formCenter: {
-    margin: "auto",
-    width: "500px",
-  },
-  textFieldCenter: {
-    width: "50%;",
-    margin: "auto",
-    display: "block",
-  },
-  buttonCenter: {
-    margin: "auto",
-    display: "block",
-  },
-  formControl: {
-    margin: "auto",
-    width: "25%",
-    display: "inline-block;",
-  },
-  title: { textAlign: "center" },
-  image: {
-    width: "500px",
-    margin: "auto",
-    display: "block",
-  },
-  footer: {
-    padding: theme.spacing(3, 2),
-    marginTop: "8%",
-    backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[200]
-        : theme.palette.grey[800],
-  },
-  loginButton: {
-    textAlign: "center",
-  },
-  loginFields: {
-    // display: "inline-block",
-    // marginLeft: "30px",
-    marginRight: "auto",
-    marginTop: "2%",
-    marginBottom: "2%",
-    margin: "auto",
-    display: "inline-block",
-    marginLeft: "30px",
-  },
-  allReportsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-    gridGap: "10%",
-    gridAutoRows: "250px",
-  },
-  allReportsCell: {
-    outlineStyle: "solid",
+    marginBottom: "1.75%",
     textDecoration: "none",
   },
-  allReportsIndividualImage: {
-    maxWidth: "460px",
-    maxHeight: "190px",
-    display: "block",
+  tabs: {
     marginLeft: "auto",
-    marginRight: "auto",
+    // "&:hover": {
+    //   background: backgroundColor,
+    // },
+    textDecoration: "none",
+    color: textColor,
   },
-  allReportsGridPadding: {
-    paddingLeft: "20%",
-    paddingRight: "20%",
+  logoTabs: {
+    textDecoration: "none",
   },
+  tabsContainer: {
+    marginLeft: "auto",
+  },
+  logoTabColor: {
+    // "&:hover": {
+    //   background: textColor,
+    // },
+    color: textColor,
+    textDecoration: "none",
+    marginRight: "-10",
+  },
+  icons: {
+    fontSize: "1.4rem",
+  },
+  iconLogo: {
+    color: "white",
+  },
+  navBarcolor: {
+    backgroundColor: backgroundColor,
+  },
+  responsiveContainer: { marginLeft: "auto", backgroundColor },
+  responsiveButtonContainer: { marginLeft: "auto", color: textColor },
+  responsiveMenuIconToggle: { fontSize: "3rem", color: textColor },
+  tabHeight: { minHeight: "75px", height: "75px" },
+  reportFormTitles: { textAlign: "center" },
+  reactMap: { marginTop: "10%", marginLeft: "10%" },
+  reactMapButtons: { textDecoration: "none", color: "white" },
+  navTabs: {
+    display: "inline",
+    marginRight: "1%",
+    marginBottom: "-1%",
+    textDecoration: "none",
+  },
+  navLightModeBar: { color: "#191919" },
+  searchBarMargin: { marginLeft: "1%" },
+  searchBarContainer: { marginTop: "10%" },
 }));
 
 export default useStyles;

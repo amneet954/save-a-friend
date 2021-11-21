@@ -1,32 +1,36 @@
 import axios from "axios";
 
-//Default State
+//Initial State
 const defaultReport = [];
 
-//Action Type
-const GET_REPORTS = "GET_REPORTS";
+//Action Types
 const FOUND_OR_LOST = "FOUND_OR_LOST";
+const GET_REPORTS = "GET_REPORTS";
+const GET_SEARCH_RESULTS = "GET_SEARCH_RESULTS";
 const LOCAL_ACTIVE_PETS = "LOCAL_ACTIVE_PETS";
 
-//Action Creator
+//Action Creators
 const getAllReports = (report) => ({ type: GET_REPORTS, report });
 const getFoundOrLost = (petList) => ({ type: FOUND_OR_LOST, petList });
 const getLocalActivePets = (localActivePets) => ({
   type: LOCAL_ACTIVE_PETS,
   localActivePets,
 });
-//Thunk
+const getSearchResults = (searchResults) => ({
+  type: GET_SEARCH_RESULTS,
+  searchResults,
+});
 
-export const gettingLocalActivePets = () => async (dispatch) => {
+//Thunks
+export const gettingAllReports = () => async (dispatch) => {
   try {
     let response = await axios({
       method: "GET",
       withCredentials: true,
-      baseURL: `http://localhost:4000/report/homePage`,
+      url: `http://localhost:4000/report/`,
     });
     let { data } = response;
-    console.log(response);
-    dispatch(getLocalActivePets(data));
+    dispatch(getAllReports(data));
   } catch (error) {
     console.log({ Error: error });
   }
@@ -46,15 +50,30 @@ export const gettingFoundPetsType = (truthy) => async (dispatch) => {
   }
 };
 
-export const gettingAllReports = () => async (dispatch) => {
+export const gettingLocalActivePets = () => async (dispatch) => {
   try {
     let response = await axios({
       method: "GET",
       withCredentials: true,
-      url: `http://localhost:4000/report/`,
+      baseURL: `http://localhost:4000/report/homePage`,
     });
     let { data } = response;
-    dispatch(getAllReports(data));
+    console.log(response);
+    dispatch(getLocalActivePets(data));
+  } catch (error) {
+    console.log({ Error: error });
+  }
+};
+
+export const gettingSearchResults = (searchValue) => async (dispatch) => {
+  try {
+    let response = await axios({
+      method: "GET",
+      withCredentials: true,
+      baseURL: `http://localhost:4000/report/search/${searchValue}`,
+    });
+    let { data } = response;
+    dispatch(getSearchResults(data));
   } catch (error) {
     console.log({ Error: error });
   }
@@ -63,10 +82,12 @@ export const gettingAllReports = () => async (dispatch) => {
 //Reducer
 let allReports = (state = defaultReport, action) => {
   switch (action.type) {
-    case GET_REPORTS:
-      return [...action.report];
     case FOUND_OR_LOST:
       return [...action.petList];
+    case GET_REPORTS:
+      return [...action.report];
+    case GET_SEARCH_RESULTS:
+      return [...action.searchResults];
     case LOCAL_ACTIVE_PETS:
       return [...action.localActivePets];
     default:

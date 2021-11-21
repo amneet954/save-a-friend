@@ -2,19 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { reportCreation } from "../store";
 import { Button, Container, TextField } from "@material-ui/core";
+import Paper from "@mui/material/Paper";
 import { Redirect } from "react-router-dom";
 import useStyles from "./style/index.js";
+import { GenericPage } from "./childComponents";
 
 const CreateReportForm = () => {
   let [petName, setPetName] = useState("");
   let [lastPlaceSeen, setLastPlace] = useState("");
-  let [contactEmail, setContactEmail] = useState("");
-  let [zipCode, setZipCode] = useState("");
   let [redirect, setRedirect] = useState(false);
   const user = useSelector((state) => state.user);
-  const allState = useSelector((state) => state);
   const dispatch = useDispatch();
-  const { _id, username } = user;
+  const { _id, username, email } = user;
   const classes = useStyles();
 
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
@@ -24,18 +23,20 @@ const CreateReportForm = () => {
     if (!uploadedImage.name) alert("Image Upload Failed");
     let formData = new FormData();
     const userId = _id;
+    const contactEmail = email;
     formData.append("file", uploadedImage);
     formData.append("userId", userId);
+    formData.append("username", username);
+    formData.append("contactEmail", contactEmail);
     formData.append("petName", petName);
     formData.append("lastPlaceSeen", lastPlaceSeen);
-    formData.append("contactEmail", contactEmail);
-    formData.append("zipCode", zipCode);
     await dispatch(reportCreation(formData));
     setRedirect(true);
   };
 
   useEffect(() => {
     if (redirect === true) {
+      window.scrollTo(0, 0);
       setRedirect(false);
     }
   }, []);
@@ -50,105 +51,87 @@ const CreateReportForm = () => {
     },
     {
       value: lastPlaceSeen,
-      label: "Last Seen",
+      label: "Enter Complete Address Here",
       eventName: "lastPlaceSeen",
       type: "text",
       function: setLastPlace,
     },
-    {
-      value: zipCode,
-      label: "Zip Code",
-      eventName: "zipCode",
-      type: "text",
-      function: setZipCode,
-    },
-    {
-      value: contactEmail,
-      label: "Contact Email",
-      eventName: "contactEmail",
-      type: "email",
-      function: setContactEmail,
-    },
   ];
-  console.log("ALL STATE: ", allState);
-  console.log("USERNAME: ", user);
+
+  let contentObj = {
+    type: `Hi ${username}, let's save your pet!`,
+    pageInfo: "",
+  };
+
   if (redirect === true) {
-    return <Redirect to="map" />;
+    return <Redirect to="/map" />;
   } else if (username) {
     return (
-      <div>
-        <button
-          onClick={(event) => {
-            event.preventDefault();
-            setRedirect(true);
-          }}
-        >
-          redirect button
-        </button>
-        <h1 className={classes.title}>Hi {username}, let's save your pet!</h1>
-        <Container maxWidth="sm">
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              createReport();
-              <Redirect to="/map" />;
-            }}
-          >
-            {fields.map((field, idx) => {
-              return (
-                <div key={idx}>
-                  <TextField
-                    name={field.eventName}
-                    type={field.type}
-                    label={field.label}
-                    value={field.value}
-                    required
-                    fullWidth
-                    onChange={(event) => field.function(event.target.value)}
-                    className={classes.textFieldCenter}
-                  />
-                  <br />
-                </div>
-              );
-            })}
-            <input
-              className={classes.textFieldCenter}
-              type="file"
-              onChange={(event) => {
-                setUploadedImageUrl(URL.createObjectURL(event.target.files[0]));
-                setUploadedImage(event.target.files[0]);
+      <Container>
+        <GenericPage content={contentObj} />
+        <Paper className={classes.reportContainer}>
+          <Container maxWidth="sm">
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                createReport();
+                <Redirect to="/map" />;
               }}
-            />
-            <br />
-            <img
-              src={
-                !uploadedImageUrl.trim()
-                  ? "Please Upload an Image"
-                  : uploadedImageUrl
-              }
-              style={{ width: "500px" }}
-              alt=""
-              className={classes.image}
-            />
-            <br />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.buttonCenter}
             >
-              Submit
-            </Button>
-          </form>
-        </Container>
-      </div>
+              {fields.map((field, idx) => {
+                return (
+                  <div key={idx}>
+                    <h4 className={classes.reportFormTitles}>{field.label}:</h4>
+                    <TextField
+                      variant="filled"
+                      name={field.eventName}
+                      type={field.type}
+                      value={field.value}
+                      required
+                      fullWidth
+                      onChange={(event) => field.function(event.target.value)}
+                      className={classes.reportTextField}
+                    />
+                    <br />
+                  </div>
+                );
+              })}
+              <input
+                className={classes.textFieldCenter}
+                type="file"
+                onChange={(event) => {
+                  setUploadedImageUrl(
+                    URL.createObjectURL(event.target.files[0])
+                  );
+                  setUploadedImage(event.target.files[0]);
+                }}
+              />
+              <br />
+              <img
+                src={
+                  !uploadedImageUrl.trim()
+                    ? "Please Upload an Image"
+                    : uploadedImageUrl
+                }
+                alt="Upload"
+                className={classes.image}
+              />
+              <br />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.buttonCenter}
+              >
+                Create a Lost Pet Post
+              </Button>
+            </form>
+          </Container>
+        </Paper>
+      </Container>
     );
   } else {
-    return (
-      <div>
-        <h1>Please login in or sign up to create report</h1>
-      </div>
-    );
+    return <Redirect to="login" />;
   }
 };
 

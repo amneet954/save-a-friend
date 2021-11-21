@@ -1,32 +1,70 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import useStyles from "../style";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Button,
+  Typography,
+} from "@mui/material/";
+import { Grid } from "@material-ui/core/";
 
 const AllReportsLogic = ({ allReports }) => {
   const classes = useStyles();
+
   return (
-    <div className={classes.allReportsGridPadding}>
-      <div className={classes.allReportsGrid}>
-        {allReports.map((pet, idx) => {
-          return (
-            <div key={idx}>
-              <div className={classes.allReportsCell}>
-                <a href={`http://localhost:3000/pet/${pet._id}`}>
-                  <img
-                    src={`http://localhost:4000/report/pet/${pet._id}/${pet.petImageName}`}
-                    alt="recent"
-                    className={classes.allReportsIndividualImage}
-                  />
-                </a>
-              </div>
-              <Link to={`/pet/${pet._id}`} className={classes.linkDecoration}>
-                <h4 className={classes.title}>{pet.petName}</h4>
-              </Link>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <Grid container span className={classes.gridContainer}>
+      {allReports.map((pet, idx) => {
+        console.log("PET:  ", pet);
+        return (
+          <Grid item xs={12} sm={4} key={idx} className={classes.gridItem}>
+            <Card>
+              <CardMedia
+                component="img"
+                alt="pet"
+                height="200"
+                image={`http://localhost:4000/file/${pet.petImageName}`}
+              />
+              <CardContent className={classes.cardContent}>
+                <Typography gutterBottom variant="h5" component="div">
+                  {pet.petName}
+                </Typography>
+              </CardContent>
+
+              {pet.found === "lost" ? (
+                <span>
+                  <Typography
+                    display="block"
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    Date Lost: {pet.createdAt}
+                  </Typography>
+                  <Typography
+                    display="block"
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    Last Place Seen: {pet.lastPlaceSeen}
+                  </Typography>
+
+                  <CardActions>
+                    <Button
+                      size="small"
+                      fullWidth="true"
+                      href={`http://localhost:3000/pet/${pet._id}`}
+                    >
+                      Learn More
+                    </Button>
+                  </CardActions>
+                </span>
+              ) : null}
+            </Card>
+          </Grid>
+        );
+      })}
+    </Grid>
   );
 };
 
