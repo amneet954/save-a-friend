@@ -15,7 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
-const Navbar = () => {
+const NavigationBar = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   let backgroundColor = prefersDarkMode ? "#191919" : "#ffffff";
   let textColor = prefersDarkMode ? "#ffffff" : "#2E3B55";
@@ -183,4 +183,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavigationBar;

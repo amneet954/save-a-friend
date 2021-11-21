@@ -1,4 +1,4 @@
-// export { default as Navbar } from "./Navbar";
+export { default as NavigationBar } from "./NavigationBar";
 export { default as Authentication } from "./Authentication";
 export { default as Home } from "./Home";
 export { default as CreateReportForm } from "./CreateReportForm";
