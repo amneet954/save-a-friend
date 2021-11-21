@@ -24,7 +24,11 @@ const AllReportsLogic = ({ allReports }) => {
                 component="img"
                 alt="pet"
                 height="200"
-                image={`http://localhost:4000/file/${pet.petImageName}`}
+                image={
+                  pet.petImageName !== "SAF Organization"
+                    ? `http://localhost:4000/file/${pet.petImageName}`
+                    : "https://i.imgur.com/reEUS1d.jpg"
+                }
               />
               <CardContent className={classes.cardContent}>
                 <Typography gutterBottom variant="h5" component="div">

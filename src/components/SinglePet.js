@@ -44,8 +44,8 @@ const SinglePet = ({ match }) => {
   } else if (petFoundRedirect === true) {
     <Redirect to="/" />;
   } else if (report.data) {
-    let { file, query } = report.data;
-    let { commentData } = report;
+    let { commentData, data } = report;
+    console.log("REPORT HERE:", report.commentData);
     return (
       <Grid className={classes.gridPadding}>
         <Paper>
@@ -56,7 +56,7 @@ const SinglePet = ({ match }) => {
               className={classes.singlePetTitle}
               component="div"
             >
-              {query.petName}
+              {data.petName}
             </Typography>
 
             <CardMedia
@@ -64,7 +64,8 @@ const SinglePet = ({ match }) => {
               component="img"
               alt="pet"
               height="500"
-              image={`http://localhost:4000/report/pet/${file._id}/${query.petImageName}`}
+              // image={`http://localhost:4000/report/pet/${file._id}/${data.petImageName}`},
+              image={`http://localhost:4000/file/${data.petImageName}`}
             />
             <span className={classes.singlePetBody}>
               <Typography
@@ -74,14 +75,14 @@ const SinglePet = ({ match }) => {
                 className={classes.singlePetBody}
               >
                 <strong> Date Lost: </strong>
-                {query.createdAt}
+                {data.createdAt}
               </Typography>
               <Typography
                 display="block"
                 variant="body1"
                 color="text.secondary"
               >
-                <strong>Last Place Seen:</strong> {query.lastPlaceSeen}
+                <strong>Last Place Seen:</strong> {data.lastPlaceSeen}
               </Typography>
             </span>
             <CardActions>
@@ -93,7 +94,7 @@ const SinglePet = ({ match }) => {
                 Find me on the map!
               </Button>
             </CardActions>
-            {query.userId === user._id ? (
+            {data.userId === user._id ? (
               <CardActions>
                 <Button
                   size="large"
@@ -110,18 +111,18 @@ const SinglePet = ({ match }) => {
         {report.commentData.length > 0 ? (
           <Comment
             allComments={commentData}
-            petCommentId={query._id}
+            petCommentId={data._id}
             userId={user._id}
             updateComments={updateComments}
-            petName={query.petName}
+            petName={data.petName}
           />
         ) : (
           <Comment
             allComments={commentData}
-            petCommentId={query._id}
+            petCommentId={data._id}
             userId={user._id}
             updateComments={updateComments}
-            petName={query.petName}
+            petName={data.petName}
           />
         )}
       </Grid>

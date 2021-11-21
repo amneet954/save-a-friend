@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-
 import { useSelector, useDispatch } from "react-redux";
 import { gettingFoundPetsType } from "../store";
 import useSupercluster from "use-supercluster";
@@ -15,21 +14,17 @@ let accessToken = process.env.REACT_APP_MAPBOX_API;
 const Map = ({ match }) => {
   let history = useHistory();
   const classes = useStyles();
-
   let [zipCodes, setZipCodes] = useState({});
   const state = useSelector((state) => state);
   let { allReports, report } = state;
 
   const initalDispatch = async () => {
-    window.scrollTo(0, 0);
     await dispatch(gettingFoundPetsType("lost"));
     let obj = {};
     for (let i = 0; i < allReports.length; i++) {
       let current = allReports[i];
       let { geo, petName, _id } = current;
       let { longitude, latitude } = geo;
-      longitude = Number(longitude.toFixed(5));
-      latitude = Number(latitude.toFixed(5));
       let value = `${longitude},${latitude}`;
       if (!obj[value]) obj[value] = [petName + " " + _id];
       else obj[value].push(petName + " " + _id);
@@ -38,12 +33,14 @@ const Map = ({ match }) => {
   };
 
   let [viewport, setViewport] = useState({
-    width: "80vw",
-    height: "75vh",
-    latitude: report.data ? report.data.query.geo.latitude : 40.68421,
-    longitude: report.data ? report.data.query.geo.longitude : -73.83163,
+    width: "100vw",
+    height: "95vh",
+    latitude: report.data ? report.data.latitude : 40.68421,
+    longitude: report.data ? report.data.longitude : -73.83163,
     zoom: 14,
   });
+
+  //GRAB VALUES FROM IP API FOR LAT/LONG
 
   let [notSwitched, setNotSwitched] = useState(true);
 
@@ -63,7 +60,7 @@ const Map = ({ match }) => {
 
     if (objectSize > 0) {
       let singleReport = "";
-      if (report.data) singleReport = report.data.query.geo;
+      if (report.data) singleReport = report.data.geo;
       else singleReport = report.geo;
       if (singleReport && notSwitched) {
         let longitude = singleReport.longitude;
@@ -106,7 +103,7 @@ const Map = ({ match }) => {
     points,
     zoom: viewport.zoom,
     bounds,
-    options: { radius: 75, maxZoom: 20 },
+    options: { radius: 75, maxZoom: 16 },
   });
 
   const [selectedObj, setSelectObj] = useState({});
@@ -126,12 +123,12 @@ const Map = ({ match }) => {
           onViewportChange={(viewport) => handleViewportChange(viewport)}
           ref={mapRef}
           attributionControl={false}
-          className={classes.reactMap}
+          // className={classes.reactMap}
         >
           {clusters.map((cluster) => {
             let [longitude, latitude] = cluster.geometry.coordinates;
-            longitude = Number(longitude.toFixed(5));
-            latitude = Number(latitude.toFixed(5));
+            // longitude = Number(longitude.toFixed(6));
+            // latitude = Number(latitude.toFixed(6));
             const { cluster: isCluster, point_count: pointCount } =
               cluster.properties;
 
@@ -165,18 +162,19 @@ const Map = ({ match }) => {
                       let coords = cluster.geometry.coordinates;
                       let long = coords[0].toFixed(5).toString();
                       let lat = coords[1].toFixed(5).toString();
-
+                      // console.log("Cluster ID", {
+                      //   long,
+                      //   lat,
+                      // });
                       if (zipCodes[long + "," + lat]) {
                         let values = zipCodes[long + "," + lat];
-
                         let arrObj = {
                           names: values,
                           long: Number(long),
                           lat: Number(lat),
                         };
-
                         setMultObjs(arrObj);
-                      }
+                      } else console.log("fuck off", zipCodes);
                     }}
                   >
                     <Brightness1Icon fontSize="small" color="primary" />
@@ -194,13 +192,8 @@ const Map = ({ match }) => {
                 <Container
                   onClick={() => {
                     setMultObjs({});
-                    let long = cluster.geometry.coordinates[0]
-                      .toFixed(5)
-                      .toString();
-                    let lat = cluster.geometry.coordinates[1]
-                      .toFixed(5)
-                      .toString();
-
+                    let long = cluster.geometry.coordinates[0].toString();
+                    let lat = cluster.geometry.coordinates[1].toString();
                     if (zipCodes[long + "," + lat]) {
                       let value = zipCodes[long + "," + lat][0];
                       let lastIdx = value.indexOf(" ");
@@ -210,8 +203,8 @@ const Map = ({ match }) => {
                       setSelectObj({ id, name, long, lat });
                     }
                     setViewport({
-                      width: "80vw",
-                      height: "75vh",
+                      width: window.innerWidth,
+                      height: window.innerHeight * 0.84,
                       latitude,
                       longitude,
                       zoom: 20,
@@ -271,7 +264,6 @@ const Map = ({ match }) => {
             </Popup>
           ) : null}
         </ReactMapGL>
-
         <Grid container span>
           <Grid item xs={6} className={classes.cardContent}>
             <Button
@@ -284,13 +276,11 @@ const Map = ({ match }) => {
 
                 setViewport({
                   zoom: 10,
-                  width: "80vw",
-                  height: "75vh",
-                  latitude: report.data
-                    ? report.data.query.geo.latitude
-                    : 40.68421,
+                  width: "100vw",
+                  height: "95vh",
+                  latitude: report.data ? report.data.geo.latitude : 40.68421,
                   longitude: report.data
-                    ? report.data.query.geo.longitude
+                    ? report.data.geo.longitude
                     : -73.83163,
                 });
               }}
@@ -315,7 +305,7 @@ const Map = ({ match }) => {
               }}
             >
               {report.data
-                ? `Back to ${report.data.query.petName}'s page`
+                ? `Back to ${report.data.petName}'s page`
                 : "Our Lost Friends"}
             </Button>
           </Grid>

@@ -89,7 +89,7 @@ router.get("/pet/:petId", async (req, res) => {
     });
 
     const { petImageName } = query;
-
+    res.status(200).json(query);
     // gfs.find({ filename: petImageName }).toArray((err, files) => {
     //   if (!files[0] || files.length === 0) {
     //     return res.status(200).json({
@@ -135,8 +135,8 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     }
     lastPlaceSeen = data.features[0].place_name;
     let values = data.features[0].geometry.coordinates;
-    const longitude = values[0];
-    const latitude = values[1];
+    const longitude = values[0].toFixed(6);
+    const latitude = values[1].toFixed(6);
     let geo = { longitude, latitude };
 
     const newReport = await new Report({

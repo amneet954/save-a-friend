@@ -14,7 +14,13 @@ const Home = () => {
     window.scrollTo(0, 0);
     dispatch(gettingLocalActivePets());
   }, []);
-  let contentObj = { type: "Lost Pets in Your Area", pageInfo: "" };
+  let contentObj = {
+    type:
+      allReports.length > 0
+        ? "Lost Pets in Your Area"
+        : "No Lost  Pets  in  Your Area!  :)",
+    pageInfo: "",
+  };
   return (
     <Container>
       <GenericPage content={contentObj} />

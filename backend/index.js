@@ -4,7 +4,6 @@ const app = express();
 const authRoutes = require("./routes/authRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const reportRoutes = require("./routes/reportRoutes");
-
 const Grid = require("gridfs-stream");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -15,7 +14,7 @@ const session = require("express-session");
 const path = require("path");
 const logger = require("morgan");
 const connection = require("./db");
-
+const dbSeed = require("./dbSeed");
 let gfs;
 connection();
 
@@ -76,6 +75,8 @@ app.delete("/file/:filename", async (req, res) => {
     res.send("An error occured.");
   }
 });
+
+dbSeed();
 
 const port = process.env.MONGO_PORT || 8080;
 app.listen(port, console.log(`Listening on port ${port}...`));
