@@ -1,6 +1,6 @@
 import axios from "axios";
 
-//Initial State
+  //Initial State
 const defaultReport = {};
 
 //Action Types
